@@ -1,0 +1,6 @@
+# the init script runs inside a Linux container: it must keep LF endings even when
+# checked out on Windows
+*.sh text eol=lf
+# data files are binary
+*.gz binary
+*.part* binary

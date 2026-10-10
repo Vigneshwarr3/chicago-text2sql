@@ -1,0 +1,15 @@
+# The benchmark database: PostgreSQL 15 with the full Chicago crime data baked into the image.
+#   docker compose up -d      pulls the image on first use, then starts in seconds
+#   docker compose down       stop it (the database is read-only, there is nothing to lose)
+services:
+  db:
+    image: ${DB_IMAGE:-vigneshwarr/chicago-crime-db:latest}
+    container_name: chicago-crime-db
+    ports:
+      # bound to localhost only; change the host port with DB_PORT in .env
+      - "127.0.0.1:${DB_PORT:-5440}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U ai_agent -d chicago_crime_new"]
+      interval: 5s
+      timeout: 5s
+      retries: 30

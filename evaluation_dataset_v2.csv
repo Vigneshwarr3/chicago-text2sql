@@ -1,0 +1,258 @@
+"id","complexity","question","sql_query"
+"1","Easy","How many total crime incidents are in the database?","SELECT COUNT(*) AS total_crimes FROM crime_incidents;"
+"2","Easy","How many crimes resulted in an arrest?","SELECT COUNT(*) AS arrested_crimes FROM crime_incidents WHERE ""ARREST"" = TRUE;"
+"3","Easy","How many domestic violence crimes were reported?","SELECT COUNT(*) AS domestic_crimes FROM crime_incidents WHERE ""DOMESTIC"" = TRUE;"
+"4","Easy","What are the top 5 most common crime types?","SELECT ""CRIME_TYPE"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_TYPE"" ORDER BY crime_count DESC LIMIT 5;"
+"5","Easy","How many crimes were reported in the year 2023?","SELECT COUNT(*) AS total_crimes FROM crime_incidents WHERE ""YEAR"" = 2023;"
+"6","Easy","List all distinct crime categories in the database.","SELECT DISTINCT ""CRIME_CATEGORY"" FROM crime_incidents ORDER BY ""CRIME_CATEGORY"";"
+"7","Easy","How many crimes occurred in district 003?","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""DISTRICT"" = '003';"
+"8","Easy","What is the total number of crimes reported per year?","SELECT ""YEAR"", COUNT(*) AS total_crimes FROM crime_incidents GROUP BY ""YEAR"" ORDER BY ""YEAR"";"
+"9","Easy","How many crimes were reported in January 2025?","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""INCIDENT_DATE"" >= '2025-01-01' AND ""INCIDENT_DATE"" < '2025-02-01';"
+"10","Easy","What percentage of all crimes resulted in an arrest?","SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct FROM crime_incidents;"
+"11","Easy","List the top 10 blocks with the most crime incidents.","SELECT ""BLOCK"", COUNT(*) AS incident_count FROM crime_incidents GROUP BY ""BLOCK"" ORDER BY incident_count DESC LIMIT 10;"
+"12","Easy","How many crimes happened on weekends?","SELECT COUNT(*) AS weekend_crimes FROM crime_incidents WHERE EXTRACT(DOW FROM ""INCIDENT_DATE"") IN (0, 6);"
+"13","Easy","What are the top 10 most common crime location types?","SELECT ""LOCATION_DESCRIPTION"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""LOCATION_DESCRIPTION"" ORDER BY crime_count DESC LIMIT 10;"
+"14","Easy","How many THEFT crimes were reported in 2024?","SELECT COUNT(*) AS theft_count FROM crime_incidents WHERE ""CRIME_TYPE"" = 'THEFT' AND ""YEAR"" = 2024;"
+"15","Easy","How many crimes are classified as violent crimes?","SELECT COUNT(*) AS violent_crimes FROM crime_incidents WHERE ""VIOLENT_CRIME_FLAG"" = 1;"
+"16","Easy","How many crimes are classified as property crimes?","SELECT COUNT(*) AS property_crimes FROM crime_incidents WHERE ""PROPERTY_CRIME_FLAG"" = 1;"
+"17","Easy","How many crimes are classified as drug crimes?","SELECT COUNT(*) AS drug_crimes FROM crime_incidents WHERE ""DRUG_CRIME_FLAG"" = 1;"
+"18","Easy","How many crimes involved a weapon?","SELECT COUNT(*) AS weapon_crimes FROM crime_incidents WHERE ""WEAPON_CRIME_FLAG"" = 1;"
+"19","Easy","How many crimes have a High severity level?","SELECT COUNT(*) AS high_severity_crimes FROM crime_incidents WHERE ""CRIME_SEVERITY_LEVEL"" = 'High';"
+"20","Easy","List all distinct crime severity levels.","SELECT DISTINCT ""CRIME_SEVERITY_LEVEL"" FROM crime_incidents ORDER BY ""CRIME_SEVERITY_LEVEL"";"
+"21","Easy","How many crimes occurred in a High Risk location?","SELECT COUNT(*) AS high_risk_crimes FROM crime_incidents WHERE ""LOCATION_RISK_CATEGORY"" = 'High Risk';"
+"22","Easy","How many crimes were both domestic and resulted in an arrest?","SELECT COUNT(*) AS domestic_arrests FROM crime_incidents WHERE ""DOMESTIC"" = TRUE AND ""ARREST"" = TRUE;"
+"23","Easy","How many crimes occurred in ward 5?","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""WARD"" = '5';"
+"24","Easy","How many crimes occurred in community area 25?","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""COMMUNITY_AREA"" = '25';"
+"25","Easy","How many crimes have a High clearance bucket?","SELECT COUNT(*) AS high_clearance_crimes FROM crime_incidents WHERE ""CRIME_CLEARANCE_BUCKET"" = 'High';"
+"26","Easy","How many crimes are classified as Violent Crime under the FBI classification?","SELECT COUNT(*) AS violent_fbi_crimes FROM crime_incidents WHERE ""CRIME_FBI_CLASSIFICATION"" = 'Violent Crime';"
+"27","Easy","How many crimes were reported in the year 2021?","SELECT COUNT(*) AS total_crimes FROM crime_incidents WHERE ""YEAR"" = 2021;"
+"28","Easy","List all distinct location risk categories.","SELECT DISTINCT ""LOCATION_RISK_CATEGORY"" FROM crime_incidents ORDER BY ""LOCATION_RISK_CATEGORY"";"
+"29","Easy","How many crimes have a missing (null) latitude?","SELECT COUNT(*) AS missing_lat_crimes FROM crime_incidents WHERE ""LATITUDE"" IS NULL;"
+"30","Easy","How many crimes were updated on or after January 1, 2025?","SELECT COUNT(*) AS updated_crimes FROM crime_incidents WHERE ""UPDATED_ON"" >= '2025-01-01';"
+"31","Medium","What are the top 10 districts (by name) with the most crimes?","SELECT dn.district_name, COUNT(*) AS crime_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id GROUP BY dn.district_name ORDER BY crime_count DESC LIMIT 10;"
+"32","Medium","What are the top 10 wards (by name) with the most crimes?","SELECT wn.ward_name, COUNT(*) AS crime_count FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id GROUP BY wn.ward_name ORDER BY crime_count DESC LIMIT 10;"
+"33","Medium","What are the top 10 community areas (by name) with the most crimes?","SELECT can.community_area_name, COUNT(*) AS crime_count FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id GROUP BY can.community_area_name ORDER BY crime_count DESC LIMIT 10;"
+"34","Medium","What are the top 5 crime offense groups by count?","SELECT ""CRIME_OFFENSE_GROUP"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_OFFENSE_GROUP"" ORDER BY crime_count DESC LIMIT 5;"
+"35","Medium","What is the arrest rate for each crime category?","SELECT ""CRIME_CATEGORY"", ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct FROM crime_incidents GROUP BY ""CRIME_CATEGORY"" ORDER BY arrest_rate_pct DESC;"
+"36","Medium","What is the monthly crime count for 2023?","SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS crime_count FROM crime_incidents WHERE ""YEAR"" = 2023 GROUP BY month ORDER BY month;"
+"37","Medium","Which 5 districts (by name) have the highest number of arrests?","SELECT dn.district_name, COUNT(*) AS arrest_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""ARREST"" = TRUE GROUP BY dn.district_name ORDER BY arrest_count DESC LIMIT 5;"
+"38","Medium","How many crimes occurred on each day of the week?","SELECT EXTRACT(DOW FROM ""INCIDENT_DATE"") AS day_of_week, COUNT(*) AS crime_count FROM crime_incidents GROUP BY day_of_week ORDER BY day_of_week;"
+"39","Medium","How many crimes are there for each severity level?","SELECT ""CRIME_SEVERITY_LEVEL"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_SEVERITY_LEVEL"" ORDER BY crime_count DESC;"
+"40","Medium","Which 3 wards (by name) have the most domestic violence crimes?","SELECT wn.ward_name, COUNT(*) AS domestic_count FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id WHERE ci.""DOMESTIC"" = TRUE GROUP BY wn.ward_name ORDER BY domestic_count DESC LIMIT 3;"
+"41","Medium","What percentage of violent crimes resulted in an arrest?","SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct FROM crime_incidents WHERE ""VIOLENT_CRIME_FLAG"" = 1;"
+"42","Medium","Which districts (by name) had more than 20000 crimes in 2024?","SELECT dn.district_name, COUNT(*) AS crime_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""YEAR"" = 2024 GROUP BY dn.district_name HAVING COUNT(*) > 20000 ORDER BY crime_count DESC;"
+"43","Medium","What are the top 5 community areas (by name) with the highest property crime counts?","SELECT can.community_area_name, COUNT(*) AS property_crime_count FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id WHERE ci.""PROPERTY_CRIME_FLAG"" = 1 GROUP BY can.community_area_name ORDER BY property_crime_count DESC LIMIT 5;"
+"44","Medium","Which year had the highest number of homicide offenses?","SELECT ""YEAR"", COUNT(*) AS homicide_count FROM crime_incidents WHERE ""CRIME_OFFENSE_GROUP"" = 'Homicide' GROUP BY ""YEAR"" ORDER BY homicide_count DESC LIMIT 1;"
+"45","Medium","How many distinct blocks had at least one weapon-related crime?","SELECT COUNT(DISTINCT ""BLOCK"") AS block_count FROM crime_incidents WHERE ""WEAPON_CRIME_FLAG"" = 1;"
+"46","Medium","How many crimes fall under each FBI classification?","SELECT ""CRIME_FBI_CLASSIFICATION"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_FBI_CLASSIFICATION"" ORDER BY crime_count DESC;"
+"47","Medium","What are the top 5 crime offense subtypes among drug crimes?","SELECT ""CRIME_OFFENSE_SUBTYPE"", COUNT(*) AS crime_count FROM crime_incidents WHERE ""DRUG_CRIME_FLAG"" = 1 GROUP BY ""CRIME_OFFENSE_SUBTYPE"" ORDER BY crime_count DESC LIMIT 5;"
+"48","Medium","How many violent-category crimes occurred each year?","SELECT ""YEAR"", COUNT(*) AS violent_count FROM crime_incidents WHERE ""CRIME_CATEGORY"" = 'Violent' GROUP BY ""YEAR"" ORDER BY ""YEAR"";"
+"49","Medium","Which district (by name) had the most arrests in 2023?","SELECT dn.district_name, COUNT(*) AS arrest_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""ARREST"" = TRUE AND ci.""YEAR"" = 2023 GROUP BY dn.district_name ORDER BY arrest_count DESC LIMIT 1;"
+"50","Medium","How many crimes fall into each location risk category?","SELECT ""LOCATION_RISK_CATEGORY"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""LOCATION_RISK_CATEGORY"" ORDER BY crime_count DESC;"
+"51","Medium","What percentage of domestic crimes resulted in an arrest?","SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct FROM crime_incidents WHERE ""DOMESTIC"" = TRUE;"
+"52","Medium","How many crimes fall into each combination of arrest and domestic status?","SELECT ""ARREST"", ""DOMESTIC"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""ARREST"", ""DOMESTIC"" ORDER BY crime_count DESC;"
+"53","Medium","What are the top 5 blocks with the most arrests?","SELECT ""BLOCK"", COUNT(*) AS arrest_count FROM crime_incidents WHERE ""ARREST"" = TRUE GROUP BY ""BLOCK"" ORDER BY arrest_count DESC LIMIT 5;"
+"54","Medium","How many crimes were recorded in each quarter of 2022?","SELECT EXTRACT(QUARTER FROM ""INCIDENT_DATE"") AS quarter, COUNT(*) AS crime_count FROM crime_incidents WHERE ""YEAR"" = 2022 GROUP BY quarter ORDER BY quarter;"
+"55","Medium","What are the top 5 wards (by name) by number of arrests?","SELECT wn.ward_name, COUNT(*) AS arrest_count FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id WHERE ci.""ARREST"" = TRUE GROUP BY wn.ward_name ORDER BY arrest_count DESC LIMIT 5;"
+"56","Medium","How many weapon-flagged crimes occurred each year?","SELECT ""YEAR"", COUNT(*) AS weapon_crime_count FROM crime_incidents WHERE ""WEAPON_CRIME_FLAG"" = 1 GROUP BY ""YEAR"" ORDER BY ""YEAR"";"
+"57","Medium","Which 5 districts (by name) have the most robbery offenses?","SELECT dn.district_name, COUNT(*) AS robbery_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""CRIME_OFFENSE_GROUP"" = 'Robbery' GROUP BY dn.district_name ORDER BY robbery_count DESC LIMIT 5;"
+"58","Medium","How many distinct districts reported at least one crime in each year?","SELECT ""YEAR"", COUNT(DISTINCT ""DISTRICT"") AS district_count FROM crime_incidents GROUP BY ""YEAR"" ORDER BY ""YEAR"";"
+"59","Medium","How many domestic crimes occurred each month in 2024?","SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS domestic_count FROM crime_incidents WHERE ""YEAR"" = 2024 AND ""DOMESTIC"" = TRUE GROUP BY month ORDER BY month;"
+"60","Medium","What are the top 5 crime offense labels by count?","SELECT ""CRIME_OFFENSE_LABEL"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_OFFENSE_LABEL"" ORDER BY crime_count DESC LIMIT 5;"
+"61","Medium","How many High severity crimes did not result in an arrest?","SELECT COUNT(*) AS no_arrest_count FROM crime_incidents WHERE ""CRIME_SEVERITY_LEVEL"" = 'High' AND ""ARREST"" = FALSE;"
+"62","Medium","Which community areas (by name) had more than 5000 property crimes?","SELECT can.community_area_name, COUNT(*) AS property_crime_count FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id WHERE ci.""PROPERTY_CRIME_FLAG"" = 1 GROUP BY can.community_area_name HAVING COUNT(*) > 5000 ORDER BY property_crime_count DESC;"
+"63","Medium","In 2023, which months had more than 5000 total crimes?","SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS crime_count FROM crime_incidents WHERE ""YEAR"" = 2023 GROUP BY month HAVING COUNT(*) > 5000 ORDER BY month;"
+"64","Medium","Which year had the highest total number of arrests?","SELECT ""YEAR"", COUNT(*) AS arrest_count FROM crime_incidents WHERE ""ARREST"" = TRUE GROUP BY ""YEAR"" ORDER BY arrest_count DESC LIMIT 1;"
+"65","Medium","What are the top 5 crime types by number of distinct case numbers?","SELECT ""CRIME_TYPE"", COUNT(DISTINCT ""CASE_NUMBER"") AS case_count FROM crime_incidents GROUP BY ""CRIME_TYPE"" ORDER BY case_count DESC LIMIT 5;"
+"66","Medium","What are the top 5 districts (by name) by number of drug crimes?","SELECT dn.district_name, COUNT(*) AS drug_crime_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""DRUG_CRIME_FLAG"" = 1 GROUP BY dn.district_name ORDER BY drug_crime_count DESC LIMIT 5;"
+"67","Medium","How many public order crimes occurred each year?","SELECT ""YEAR"", COUNT(*) AS public_order_count FROM crime_incidents WHERE ""CRIME_CATEGORY"" = 'Public order' GROUP BY ""YEAR"" ORDER BY ""YEAR"";"
+"68","Medium","What are the top 5 wards (by name) by number of weapon crimes?","SELECT wn.ward_name, COUNT(*) AS weapon_crime_count FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id WHERE ci.""WEAPON_CRIME_FLAG"" = 1 GROUP BY wn.ward_name ORDER BY weapon_crime_count DESC LIMIT 5;"
+"69","Medium","How many Low severity crimes occurred each year?","SELECT ""YEAR"", COUNT(*) AS low_severity_count FROM crime_incidents WHERE ""CRIME_SEVERITY_LEVEL"" = 'Low' GROUP BY ""YEAR"" ORDER BY ""YEAR"";"
+"70","Medium","What is the percentage breakdown of crimes by crime category?","SELECT ""CRIME_CATEGORY"", COUNT(*) AS crime_count, ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS pct_of_total FROM crime_incidents GROUP BY ""CRIME_CATEGORY"" ORDER BY crime_count DESC;"
+"71","Hard","For each district (by name), what is the single most common crime offense group?","WITH ranked AS (
+  SELECT dn.district_name, ci.""CRIME_OFFENSE_GROUP"", COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY dn.district_name ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+  GROUP BY dn.district_name, ci.""CRIME_OFFENSE_GROUP""
+)
+SELECT district_name, ""CRIME_OFFENSE_GROUP"", crime_count FROM ranked WHERE rn = 1 ORDER BY district_name;"
+"72","Hard","For each year, which district (by name) had the most crimes?","WITH ranked AS (
+  SELECT ci.""YEAR"", dn.district_name, COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY ci.""YEAR"" ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+  GROUP BY ci.""YEAR"", dn.district_name
+)
+SELECT ""YEAR"", district_name, crime_count FROM ranked WHERE rn = 1 ORDER BY ""YEAR"";"
+"73","Hard","What is the arrest percentage for each district (by name) with more than 1000 crimes, ranked highest first?","SELECT dn.district_name,
+       COUNT(*) AS total_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+GROUP BY dn.district_name
+HAVING COUNT(*) > 1000
+ORDER BY arrest_rate_pct DESC;"
+"74","Hard","What was the month-over-month change in total crime counts during 2023?","WITH monthly AS (
+  SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS crime_count
+  FROM crime_incidents WHERE ""YEAR"" = 2023 GROUP BY month
+)
+SELECT month, crime_count, crime_count - LAG(crime_count) OVER (ORDER BY month) AS change_from_prev_month
+FROM monthly ORDER BY month;"
+"75","Hard","For wards (by name) with at least 500 crimes, what is the arrest rate, ranked highest to lowest?","SELECT wn.ward_name,
+       COUNT(*) AS total_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct
+FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+GROUP BY wn.ward_name
+HAVING COUNT(*) >= 500
+ORDER BY arrest_rate_pct DESC;"
+"76","Hard","Within each crime category, what are the top 3 crime offense subtypes by count?","WITH ranked AS (
+  SELECT ""CRIME_CATEGORY"", ""CRIME_OFFENSE_SUBTYPE"", COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY ""CRIME_CATEGORY"" ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents
+  GROUP BY ""CRIME_CATEGORY"", ""CRIME_OFFENSE_SUBTYPE""
+)
+SELECT ""CRIME_CATEGORY"", ""CRIME_OFFENSE_SUBTYPE"", crime_count FROM ranked WHERE rn <= 3 ORDER BY ""CRIME_CATEGORY"", rn;"
+"77","Hard","What was the year-over-year percentage growth in total crimes?","WITH yearly AS (
+  SELECT ""YEAR"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""YEAR""
+)
+SELECT ""YEAR"", crime_count,
+       ROUND(100.0 * (crime_count - LAG(crime_count) OVER (ORDER BY ""YEAR"")) / LAG(crime_count) OVER (ORDER BY ""YEAR""), 2) AS pct_growth
+FROM yearly ORDER BY ""YEAR"";"
+"78","Hard","Which community areas (by name) have a violent crime rate above 20% of their total crimes?","SELECT can.community_area_name,
+       COUNT(*) AS total_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""VIOLENT_CRIME_FLAG"" = 1 THEN 1 ELSE 0 END) / COUNT(*), 2) AS violent_rate_pct
+FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id
+GROUP BY can.community_area_name
+HAVING ROUND(100.0 * SUM(CASE WHEN ci.""VIOLENT_CRIME_FLAG"" = 1 THEN 1 ELSE 0 END) / COUNT(*), 2) > 20
+ORDER BY violent_rate_pct DESC;"
+"79","Hard","Which districts (by name) have a crime count above the citywide average per district?","SELECT dn.district_name, COUNT(*) AS crime_count
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+GROUP BY dn.district_name
+HAVING COUNT(*) > (
+  SELECT AVG(district_total) FROM (
+    SELECT COUNT(*) AS district_total FROM crime_incidents GROUP BY ""DISTRICT""
+  ) t
+)
+ORDER BY crime_count DESC;"
+"80","Hard","What are the top 5 blocks with the most distinct crime types?","SELECT ""BLOCK"", COUNT(DISTINCT ""CRIME_TYPE"") AS distinct_crime_types FROM crime_incidents GROUP BY ""BLOCK"" ORDER BY distinct_crime_types DESC LIMIT 5;"
+"81","Hard","For each year, which crime offense group had the highest count?","WITH ranked AS (
+  SELECT ""YEAR"", ""CRIME_OFFENSE_GROUP"", COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY ""YEAR"" ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents GROUP BY ""YEAR"", ""CRIME_OFFENSE_GROUP""
+)
+SELECT ""YEAR"", ""CRIME_OFFENSE_GROUP"", crime_count FROM ranked WHERE rn = 1 ORDER BY ""YEAR"";"
+"82","Hard","Among wards (by name) with at least 200 domestic crimes, which have the highest domestic crime rate (domestic crimes as a percentage of total crimes)?","SELECT wn.ward_name,
+       SUM(CASE WHEN ci.""DOMESTIC"" = TRUE THEN 1 ELSE 0 END) AS domestic_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""DOMESTIC"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS domestic_rate_pct
+FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+GROUP BY wn.ward_name
+HAVING SUM(CASE WHEN ci.""DOMESTIC"" = TRUE THEN 1 ELSE 0 END) >= 200
+ORDER BY domestic_rate_pct DESC LIMIT 5;"
+"83","Hard","Which districts (by name) had a higher crime count in 2024 than in 2020?","SELECT dn.district_name,
+       SUM(CASE WHEN ci.""YEAR"" = 2020 THEN 1 ELSE 0 END) AS crimes_2020,
+       SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) AS crimes_2024
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" IN (2020, 2024)
+GROUP BY dn.district_name
+HAVING SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) > SUM(CASE WHEN ci.""YEAR"" = 2020 THEN 1 ELSE 0 END)
+ORDER BY dn.district_name;"
+"84","Hard","What are the top 5 community areas (by name) with the most high-risk-location crimes that did not result in an arrest?","SELECT can.community_area_name, COUNT(*) AS crime_count
+FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id
+WHERE ci.""LOCATION_RISK_CATEGORY"" = 'High Risk' AND ci.""ARREST"" = FALSE
+GROUP BY can.community_area_name
+ORDER BY crime_count DESC LIMIT 5;"
+"85","Hard","What is the 3-month moving average of monthly crime counts for 2023?","WITH monthly AS (
+  SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS crime_count
+  FROM crime_incidents WHERE ""YEAR"" = 2023 GROUP BY month
+)
+SELECT month, crime_count,
+       ROUND(AVG(crime_count) OVER (ORDER BY month ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) AS moving_avg_3mo
+FROM monthly ORDER BY month;"
+"86","Hard","For each district (by name), what percentage of its crimes are drug or weapon crimes combined?","SELECT dn.district_name,
+       COUNT(*) AS total_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""DRUG_CRIME_FLAG"" = 1 OR ci.""WEAPON_CRIME_FLAG"" = 1 THEN 1 ELSE 0 END) / COUNT(*), 2) AS drug_or_weapon_pct
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+GROUP BY dn.district_name
+ORDER BY drug_or_weapon_pct DESC;"
+"87","Hard","Which wards (by name) have an arrest rate higher than the citywide average arrest rate?","SELECT wn.ward_name,
+       ROUND(100.0 * SUM(CASE WHEN ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct
+FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+GROUP BY wn.ward_name
+HAVING ROUND(100.0 * SUM(CASE WHEN ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) > (
+  SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) FROM crime_incidents
+)
+ORDER BY arrest_rate_pct DESC;"
+"88","Hard","What are the top 5 crime types by number of distinct blocks they occurred on?","SELECT ""CRIME_TYPE"", COUNT(DISTINCT ""BLOCK"") AS distinct_blocks FROM crime_incidents GROUP BY ""CRIME_TYPE"" ORDER BY distinct_blocks DESC LIMIT 5;"
+"89","Hard","For each year, how many districts had zero homicide offenses?","SELECT y.""YEAR"", COUNT(*) AS districts_with_zero_homicides
+FROM (SELECT DISTINCT ""YEAR"" FROM crime_incidents) y
+CROSS JOIN (SELECT DISTINCT ""DISTRICT"" FROM crime_incidents WHERE ""DISTRICT"" IS NOT NULL) d
+WHERE NOT EXISTS (
+  SELECT 1 FROM crime_incidents ci
+  WHERE ci.""YEAR"" = y.""YEAR"" AND ci.""DISTRICT"" = d.""DISTRICT"" AND ci.""CRIME_OFFENSE_GROUP"" = 'Homicide'
+)
+GROUP BY y.""YEAR"" ORDER BY y.""YEAR"";"
+"90","Hard","What are the overall top 5 (district, most common crime offense group) pairs by that group's crime count?","WITH ranked AS (
+  SELECT dn.district_name, ci.""CRIME_OFFENSE_GROUP"", COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY dn.district_name ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+  GROUP BY dn.district_name, ci.""CRIME_OFFENSE_GROUP""
+)
+SELECT district_name, ""CRIME_OFFENSE_GROUP"", crime_count FROM ranked WHERE rn = 1 ORDER BY crime_count DESC LIMIT 5;"
+"91","Hard","How many case numbers appear more than once in the crime_incidents table?","SELECT COUNT(*) AS duplicate_case_numbers FROM (
+  SELECT ""CASE_NUMBER"" FROM crime_incidents GROUP BY ""CASE_NUMBER"" HAVING COUNT(*) > 1
+) t;"
+"92","Hard","Which community areas (by name) have a crime count more than twice the citywide average per community area?","SELECT can.community_area_name, COUNT(*) AS crime_count
+FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id
+GROUP BY can.community_area_name
+HAVING COUNT(*) > 2 * (
+  SELECT AVG(area_total) FROM (
+    SELECT COUNT(*) AS area_total FROM crime_incidents GROUP BY ""COMMUNITY_AREA""
+  ) t
+)
+ORDER BY crime_count DESC;"
+"93","Hard","For each crime severity level, what is the average number of crimes per year?","SELECT ""CRIME_SEVERITY_LEVEL"", ROUND(AVG(yearly_count), 2) AS avg_crimes_per_year
+FROM (
+  SELECT ""CRIME_SEVERITY_LEVEL"", ""YEAR"", COUNT(*) AS yearly_count
+  FROM crime_incidents GROUP BY ""CRIME_SEVERITY_LEVEL"", ""YEAR""
+) t
+GROUP BY ""CRIME_SEVERITY_LEVEL"" ORDER BY avg_crimes_per_year DESC;"
+"94","Hard","What are the top 5 districts (by name) with the largest increase in arrest rate from 2020 to 2024?","SELECT dn.district_name,
+       ROUND(100.0 * SUM(CASE WHEN ci.""YEAR"" = 2024 AND ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END), 0), 2)
+       - ROUND(100.0 * SUM(CASE WHEN ci.""YEAR"" = 2020 AND ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN ci.""YEAR"" = 2020 THEN 1 ELSE 0 END), 0), 2) AS arrest_rate_change
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" IN (2020, 2024)
+GROUP BY dn.district_name
+ORDER BY arrest_rate_change DESC LIMIT 5;"
+"95","Hard","Which crime clearance bucket has the highest proportion of crimes resulting in an arrest?","SELECT ""CRIME_CLEARANCE_BUCKET"",
+       ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct
+FROM crime_incidents
+GROUP BY ""CRIME_CLEARANCE_BUCKET""
+ORDER BY arrest_rate_pct DESC LIMIT 1;"
+"96","Hard","Which ward (by name) had the single highest number of weapon crimes in any one year?","SELECT wn.ward_name, ci.""YEAR"", COUNT(*) AS weapon_crime_count
+FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+WHERE ci.""WEAPON_CRIME_FLAG"" = 1
+GROUP BY wn.ward_name, ci.""YEAR""
+ORDER BY weapon_crime_count DESC LIMIT 1;"
+"97","Hard","What percentage of total crimes does each of the top 10 districts (by name) contribute?","WITH by_district AS (
+  SELECT dn.district_name, COUNT(*) AS crime_count
+  FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+  GROUP BY dn.district_name
+)
+SELECT district_name, crime_count, ROUND(100.0 * crime_count / SUM(crime_count) OVER (), 2) AS pct_of_total
+FROM by_district ORDER BY crime_count DESC LIMIT 10;"
+"98","Hard","Which districts (by name) had a decline in crime count from 2023 to 2024?","SELECT dn.district_name,
+       SUM(CASE WHEN ci.""YEAR"" = 2023 THEN 1 ELSE 0 END) AS crimes_2023,
+       SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) AS crimes_2024
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" IN (2023, 2024)
+GROUP BY dn.district_name
+HAVING SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) < SUM(CASE WHEN ci.""YEAR"" = 2023 THEN 1 ELSE 0 END)
+ORDER BY dn.district_name;"
+"99","Hard","Rank each district (by name) by total crime count for the year 2024.","SELECT dn.district_name, COUNT(*) AS crime_count,
+       RANK() OVER (ORDER BY COUNT(*) DESC) AS district_rank
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" = 2024
+GROUP BY dn.district_name
+ORDER BY district_rank;"
+"100","Hard","What are the top 5 (year, crime category) combinations with the highest crime counts?","SELECT ""YEAR"", ""CRIME_CATEGORY"", COUNT(*) AS crime_count
+FROM crime_incidents
+GROUP BY ""YEAR"", ""CRIME_CATEGORY""
+ORDER BY crime_count DESC LIMIT 5;"
