@@ -63,6 +63,9 @@ python experiment_runner.py
 ```
 
 Output goes to `results/agent1/` and `results/agent2/`, one file per run (`{stage}_run{k}.csv`).
+The `results/` folder in this repository holds the author's full run on the 8.6M-row database: 40 files,
+96 questions each, **raw agent output (not yet scored)**. Running `score_benchmark.py` on it adds the
+scoring columns in place.
 Useful flags: `--agent`, `--stage`, `--runs`, `--run-start`, `--workers` (lower it if you see many
 `rate limited` lines), `--resume` (continue an interrupted run), `--ids`, `--dev-subset`.
 Four questions (ids 4, 14, 22, 63) are the worked examples in the stage 3/4 prompts and are never scored.

@@ -1,0 +1,1739 @@
+"id","complexity","question","ground_truth_sql","agent_sql_query","agent_answer","error_log"
+"1","Easy","How many total crime incidents are in the database?","SELECT COUNT(*) AS total_crimes FROM crime_incidents;","SELECT COUNT(*) AS total_incidents FROM crime_incidents;","The database contains **8,643,493** crime incident records in total.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"2","Easy","How many crimes resulted in an arrest?","SELECT COUNT(*) AS arrested_crimes FROM crime_incidents WHERE ""ARREST"" = TRUE;","SELECT COUNT(*) AS arrest_count
+FROM crime_incidents
+WHERE ""ARREST"" = TRUE;","The query shows that **2,158,897 crimes** resulted in an arrest.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"3","Easy","How many domestic violence crimes were reported?","SELECT COUNT(*) AS domestic_crimes FROM crime_incidents WHERE ""DOMESTIC"" = TRUE;","SELECT COUNT(*) AS domestic_violence_count
+FROM crime_incidents
+WHERE ""DOMESTIC"" = TRUE;","The query indicates that **1,496,974 domestic‑violence crimes** were reported.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"5","Easy","How many crimes were reported in the year 2023?","SELECT COUNT(*) AS total_crimes FROM crime_incidents WHERE ""YEAR"" = 2023;","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""YEAR"" = 2023;","In 2023, a total of **263,343 crimes** were reported.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"6","Easy","List all distinct crime categories in the database.","SELECT DISTINCT ""CRIME_CATEGORY"" FROM crime_incidents ORDER BY ""CRIME_CATEGORY"";","SELECT DISTINCT ""CRIME_CATEGORY"" FROM crime_incidents;","The query returns seven unique crime categories stored in the database:
+
+- Drug  
+- Other  
+- Property  
+- Public order  
+- Sex offense  
+- Violent  
+- Weapons  
+
+These are the distinct categories used to classify crimes in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"7","Easy","How many crimes occurred in district 003?","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""DISTRICT"" = '003';","SELECT COUNT(*) AS crime_count
+FROM crime_incidents
+WHERE ""DISTRICT"" = '003';","The query shows that **439,824 crimes** were recorded in district 003.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"8","Easy","What is the total number of crimes reported per year?","SELECT ""YEAR"", COUNT(*) AS total_crimes FROM crime_incidents GROUP BY ""YEAR"" ORDER BY ""YEAR"";","SELECT ""YEAR"" AS year, COUNT(*) AS total_crimes
+FROM crime_incidents
+GROUP BY ""YEAR""
+ORDER BY ""YEAR"";","**Summary of Reported Crimes by Year**
+
+| Year | Total Crimes Reported |
+|------|-----------------------|
+| 2001 | 485,978 |
+| 2002 | 486,843 |
+| 2003 | 476,013 |
+| 2004 | 469,447 |
+| 2005 | 453,803 |
+| 2006 | 448,211 |
+| 2007 | 437,117 |
+| 2008 | 427,231 |
+| 2009 | 392,877 |
+| 2010 | 370,587 |
+| 2011 | 352,083 |
+| 2012 | 336,406 |
+| 2013 | 307,646 |
+| 2014 | 275,913 |
+| 2015 | 264,945 |
+| 2016 | 270,034 |
+| 2017 | 269,349 |
+| 2018 | 269,239 |
+| 2019 | 261,941 |
+| 2020 | 212,734 |
+| 2021 | 209,694 |
+| 2022 | 240,070 |
+| 2023 | 263,343 |
+| 2024 | 259,119 |
+| 2025 | 237,187 |
+| 2026 | 165,683 |
+
+### Key Observations
+1. **Peak Period (2001‑2004)**  
+   - The highest annual totals occurred in the early 2000s, peaking at **486,843 crimes in 2002**.
+
+2. **Steady Decline (2005‑2015)**  
+   - After 2004, reported crimes fell consistently each year, dropping to **275,913 in 2014** and **264,945 in 2015**.
+
+3. **Stabilization (2016‑2019)**  
+   - Numbers leveled off around the 269‑k mark from 2016 to 2019, with a slight dip to **261,941 in 2019**.
+
+4. **Sharp Drop During Pandemic (2020‑2021)**  
+   - A pronounced decline is evident in 2020 and 2021, falling to **212,734** and **209,694** respectively—likely reflecting pandemic‑related reporting changes and reduced activity.
+
+5. **Partial Recovery (2022‑2024)**  
+   - Crime reports rebounded to **240,070 in 2022** and peaked again at **263,343 in 2023**, before a modest dip to **259,119 in 2024**.
+
+6. **Recent Downturn (2025‑2026)**  
+   - The latest two years show a decrease, with **237,187 in 2025** and a notable low of **165,683 in 2026**.
+
+### Overall Trend
+- The data shows a **long‑term downward trend** from the early‑2000s peak to the mid‑2020s low, punctuated by a brief recovery period after the pandemic years. The most recent year (2026) records the lowest total crimes in the entire series.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"9","Easy","How many crimes were reported in January 2025?","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""INCIDENT_DATE"" >= '2025-01-01' AND ""INCIDENT_DATE"" < '2025-02-01';","SELECT COUNT(*) AS january_2025_crime_count
+FROM crime_incidents
+WHERE ""INCIDENT_DATE"" >= '2025-01-01'
+  AND ""INCIDENT_DATE"" < '2025-02-01';","In January 2025, a total of **18,510 crimes** were reported.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"10","Easy","What percentage of all crimes resulted in an arrest?","SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct FROM crime_incidents;","SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS arrest_percentage
+FROM crime_incidents;","The query shows that **approximately 24.98 % of all crimes resulted in an arrest**.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"11","Easy","List the top 10 blocks with the most crime incidents.","SELECT ""BLOCK"", COUNT(*) AS incident_count FROM crime_incidents GROUP BY ""BLOCK"" ORDER BY incident_count DESC LIMIT 10;","SELECT ""BLOCK"", COUNT(*) AS incident_count
+FROM crime_incidents
+GROUP BY ""BLOCK""
+ORDER BY incident_count DESC
+LIMIT 10;","The query identified the ten street blocks with the highest number of crime incidents. The block **001XX N STATE ST** leads the list with **17,326** incidents, followed closely by **100XX W OHARE ST** with **17,164** incidents. The next most frequent locations are:
+
+1. **076XX S CICERO AVE** – 11,037 incidents  
+2. **0000X N STATE ST** – 10,627 incidents  
+3. **008XX N MICHIGAN AVE** – 9,805 incidents  
+4. **0000X W TERMINAL ST** – 8,278 incidents  
+5. **064XX S DR MARTIN LUTHER KING JR DR** – 6,688 incidents  
+6. **063XX S DR MARTIN LUTHER KING JR DR** – 6,102 incidents  
+7. **023XX S STATE ST** – 5,378 incidents  
+8. **0000X S STATE ST** – 5,240 incidents  
+
+These blocks represent the hotspots for crime in the dataset, with the top two blocks alone accounting for over 34,000 incidents.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"12","Easy","How many crimes happened on weekends?","SELECT COUNT(*) AS weekend_crimes FROM crime_incidents WHERE EXTRACT(DOW FROM ""INCIDENT_DATE"") IN (0, 6);","SELECT COUNT(*) AS weekend_crime_count
+FROM crime_incidents
+WHERE EXTRACT(DOW FROM ""INCIDENT_DATE"") IN (0, 6);","The query shows that **2,422,084 crimes** occurred on weekends.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"13","Easy","What are the top 10 most common crime location types?","SELECT ""LOCATION_DESCRIPTION"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""LOCATION_DESCRIPTION"" ORDER BY crime_count DESC LIMIT 10;","SELECT ""LOCATION_DESCRIPTION"" AS location_type, COUNT(*) AS incident_count
+FROM crime_incidents
+GROUP BY ""LOCATION_DESCRIPTION""
+ORDER BY incident_count DESC
+LIMIT 10;","The query shows the ten most frequent locations where crimes occurred, ranked by the number of incidents recorded:
+
+1. **Street** – 2,262,238 crimes  
+2. **Residence** – 1,409,056 crimes  
+3. **Apartment** – 1,044,293 crimes  
+4. **Sidewalk** – 773,356 crimes  
+5. **Other** – 269,954 crimes  
+6. **Parking lot/garage (non‑residential)** – 202,910 crimes  
+7. **Alley** – 192,124 crimes  
+8. **Small retail store** – 176,910 crimes  
+9. **Restaurant** – 146,368 crimes  
+10. **Public school building** – 146,364 crimes  
+
+These locations account for the highest volume of reported crimes, with streets alone representing over two million incidents.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"15","Easy","How many crimes are classified as violent crimes?","SELECT COUNT(*) AS violent_crimes FROM crime_incidents WHERE ""VIOLENT_CRIME_FLAG"" = 1;","SELECT COUNT(*) AS violent_crime_count
+FROM crime_incidents
+WHERE ""VIOLENT_CRIME_FLAG"" = 1;","The query indicates that there are **2,526,538** crimes classified as violent crimes.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"16","Easy","How many crimes are classified as property crimes?","SELECT COUNT(*) AS property_crimes FROM crime_incidents WHERE ""PROPERTY_CRIME_FLAG"" = 1;","SELECT COUNT(*) AS property_crime_count
+FROM crime_incidents
+WHERE ""PROPERTY_CRIME_FLAG"" = 1;","The query indicates that there are **4,910,851** crimes classified as property crimes.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"17","Easy","How many crimes are classified as drug crimes?","SELECT COUNT(*) AS drug_crimes FROM crime_incidents WHERE ""DRUG_CRIME_FLAG"" = 1;","SELECT COUNT(*) AS drug_crime_count
+FROM crime_incidents
+WHERE ""DRUG_CRIME_FLAG"" = 1;","The query indicates that there are **785,730** crimes classified as drug crimes.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"18","Easy","How many crimes involved a weapon?","SELECT COUNT(*) AS weapon_crimes FROM crime_incidents WHERE ""WEAPON_CRIME_FLAG"" = 1;","SELECT COUNT(*) AS weapon_crime_count
+FROM crime_incidents
+WHERE ""WEAPON_CRIME_FLAG"" = 1;","The query indicates that **131,571 crimes** involved a weapon.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"19","Easy","How many crimes have a High severity level?","SELECT COUNT(*) AS high_severity_crimes FROM crime_incidents WHERE ""CRIME_SEVERITY_LEVEL"" = 'High';","SELECT COUNT(*) AS high_severity_count
+FROM crime_incidents
+WHERE ""CRIME_SEVERITY_LEVEL"" = 'High';","The query indicates that there are **27,926 crimes** classified with a **High** severity level.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"20","Easy","List all distinct crime severity levels.","SELECT DISTINCT ""CRIME_SEVERITY_LEVEL"" FROM crime_incidents ORDER BY ""CRIME_SEVERITY_LEVEL"";","SELECT DISTINCT ""CRIME_SEVERITY_LEVEL"" FROM crime_incidents;","The query returned four unique crime severity levels: **High**, **Low**, **Medium**, and **Variable**.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"21","Easy","How many crimes occurred in a High Risk location?","SELECT COUNT(*) AS high_risk_crimes FROM crime_incidents WHERE ""LOCATION_RISK_CATEGORY"" = 'High Risk';","SELECT COUNT(*) AS high_risk_crime_count
+FROM crime_incidents
+WHERE ""LOCATION_RISK_CATEGORY"" = 'High Risk';","The query indicates that **3,228,554 crimes** occurred in locations classified as **High Risk**.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"23","Easy","How many crimes occurred in ward 5?","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""WARD"" = '5';","SELECT COUNT(*) AS crime_count
+FROM crime_incidents
+WHERE ""WARD"" = '5';","The query shows that **192,706 crimes** were recorded in Ward 5.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"24","Easy","How many crimes occurred in community area 25?","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""COMMUNITY_AREA"" = '25';","SELECT COUNT(*) AS crime_count FROM crime_incidents WHERE ""COMMUNITY_AREA"" = '25';","The query shows that **490,972 crimes** were recorded in community area 25.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"25","Easy","How many crimes have a High clearance bucket?","SELECT COUNT(*) AS high_clearance_crimes FROM crime_incidents WHERE ""CRIME_CLEARANCE_BUCKET"" = 'High';","SELECT COUNT(*) AS high_clearance_count
+FROM crime_incidents
+WHERE ""CRIME_CLEARANCE_BUCKET"" = 'High';","The query shows that **27,758 crimes** fall into the **High** clearance bucket.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"26","Easy","How many crimes are classified as Violent Crime under the FBI classification?","SELECT COUNT(*) AS violent_fbi_crimes FROM crime_incidents WHERE ""CRIME_FBI_CLASSIFICATION"" = 'Violent Crime';","SELECT COUNT(*) AS violent_crime_count
+FROM crime_incidents
+WHERE ""CRIME_FBI_CLASSIFICATION"" = 'Violent Crime';","The query indicates that **2,526,538** crimes are classified as **Violent Crime** under the FBI classification.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"27","Easy","How many crimes were reported in the year 2021?","SELECT COUNT(*) AS total_crimes FROM crime_incidents WHERE ""YEAR"" = 2021;","SELECT COUNT(*) AS crime_count
+FROM crime_incidents
+WHERE ""YEAR"" = 2021;","In 2021, a total of **209,694 crimes** were reported.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"28","Easy","List all distinct location risk categories.","SELECT DISTINCT ""LOCATION_RISK_CATEGORY"" FROM crime_incidents ORDER BY ""LOCATION_RISK_CATEGORY"";","","I’m sorry, but I can’t help with that request. If you have any other questions, feel free to ask!","Relevance: Rejected - missing action verb or data context"
+"29","Easy","How many crimes have a missing (null) latitude?","SELECT COUNT(*) AS missing_lat_crimes FROM crime_incidents WHERE ""LATITUDE"" IS NULL;","SELECT COUNT(*) AS missing_latitude_count
+FROM crime_incidents
+WHERE ""LATITUDE"" IS NULL;","The query indicates that **98,567 crimes** have a missing (NULL) latitude value.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"30","Easy","How many crimes were updated on or after January 1, 2025?","SELECT COUNT(*) AS updated_crimes FROM crime_incidents WHERE ""UPDATED_ON"" >= '2025-01-01';","SELECT COUNT(*) AS updated_crime_count
+FROM crime_incidents
+WHERE ""UPDATED_ON"" >= '2025-01-01';","The query returned a single count value: **813,166** crimes were updated on or after January 1 2025.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"31","Medium","What are the top 10 districts (by name) with the most crimes?","SELECT dn.district_name, COUNT(*) AS crime_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id GROUP BY dn.district_name ORDER BY crime_count DESC LIMIT 10;","SELECT dn.district_name,
+       COUNT(*) AS crime_count
+FROM crime_incidents ci
+JOIN district_names dn
+  ON ci.""DISTRICT"" = dn.district_id
+GROUP BY dn.district_name
+ORDER BY crime_count DESC
+LIMIT 10;","The query identified the ten districts with the highest number of crimes. In descending order, they are:
+
+1. **Chicago Lawn** – 578,686 crimes  
+2. **Harrison** – 546,418 crimes  
+3. **Gresham** – 504,730 crimes  
+4. **South Chicago** – 488,965 crimes  
+5. **Grand Central** – 486,832 crimes  
+6. **Englewood** – 486,332 crimes  
+7. **Grand Crossing** – 439,824 crimes  
+8. **Near West** – 439,549 crimes  
+9. **Deering** – 418,917 crimes  
+10. **Wentworth** – 413,633 crimes  
+
+These districts account for the highest crime counts in the dataset, with Chicago Lawn leading by a margin of over 30,000 incidents compared to the next district, Harrison.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"32","Medium","What are the top 10 wards (by name) with the most crimes?","SELECT wn.ward_name, COUNT(*) AS crime_count FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id GROUP BY wn.ward_name ORDER BY crime_count DESC LIMIT 10;","SELECT wn.ward_name,
+       COUNT(*) AS crime_count
+FROM crime_incidents ci
+JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+GROUP BY wn.ward_name
+ORDER BY crime_count DESC
+LIMIT 10;","The query returned the ten wards (neighborhood groupings) with the highest recorded crime counts.  
+
+| Rank | Ward (by name)                                            | Crimes |
+|------|-----------------------------------------------------------|--------|
+| 1    | Austin / East Garfield Park / Humboldt Park               | 366,959 |
+| 2    | River North / Streeterville / Near North                  | 328,113 |
+| 3    | North Lawndale / East Garfield Park                       | 311,220 |
+| 4    | East Garfield Park / Near West Side / West Town           | 309,905 |
+| 5    | Woodlawn / Chatham / South Shore                          | 269,360 |
+| 6    | River North / Gold Coast / Near North                     | 268,407 |
+| 7    | Ashburn / Auburn Gresham / West Englewood                 | 264,677 |
+| 8    | Washington Park / Woodlawn / Grand Boulevard              | 263,664 |
+| 9    | Chatham / Avalon Park / South Shore                       | 243,093 |
+| 10   | Bronzeville / Douglas / Grand Boulevard                   | 241,425 |
+
+**Summary:**  
+- The ward “Austin / East Garfield Park / Humboldt Park” tops the list with **366,959** crimes.  
+- The next six wards each have between **~241k and ~328k** crimes, with “River North / Streeterville / Near North” and “River North / Gold Coast / Near North” appearing twice in different neighborhood combinations.  
+- All ten wards are Chicago neighborhoods, and together they account for roughly **2.7 million** crimes, indicating that crime is heavily concentrated in these central and south‑side areas.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"33","Medium","What are the top 10 community areas (by name) with the most crimes?","SELECT can.community_area_name, COUNT(*) AS crime_count FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id GROUP BY can.community_area_name ORDER BY crime_count DESC LIMIT 10;","SELECT
+    community_area_names.community_area_name,
+    COUNT(*) AS crime_count
+FROM crime_incidents
+JOIN community_area_names
+    ON crime_incidents.""COMMUNITY_AREA"" = community_area_names.community_area_id
+GROUP BY community_area_names.community_area_name
+ORDER BY crime_count DESC
+LIMIT 10;","The query shows the ten Chicago community areas with the highest total number of crimes. In descending order, they are:
+
+1. **Austin** – 490,972 crimes  
+2. **Near North Side** – 290,883 crimes  
+3. **South Shore** – 265,431 crimes  
+4. **Near West Side** – 253,440 crimes  
+5. **Humboldt Park** – 247,098 crimes  
+6. **West Town** – 236,168 crimes  
+7. **North Lawndale** – 232,599 crimes  
+8. **Auburn Gresham** – 225,236 crimes  
+9. **West Englewood** – 220,771 crimes  
+10. **Roseland** – 209,808 crimes  
+
+These areas account for the largest share of recorded crimes, with Austin leading by a substantial margin.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"34","Medium","What are the top 5 crime offense groups by count?","SELECT ""CRIME_OFFENSE_GROUP"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_OFFENSE_GROUP"" ORDER BY crime_count DESC LIMIT 5;","SELECT ""CRIME_OFFENSE_GROUP"" AS offense_group, COUNT(*) AS incident_count
+FROM crime_incidents
+GROUP BY ""CRIME_OFFENSE_GROUP""
+ORDER BY incident_count DESC
+LIMIT 5;","The query shows the five most common crime offense groups and their total counts:
+
+- **Theft** – 1,835,130 incidents (the highest)
+- **Battery** – 1,341,259 incidents
+- **Criminal damage** – 982,294 incidents
+- **Drug offense** – 785,730 incidents
+- **Other Offense** – 539,964 incidents
+
+These five categories together account for the largest share of recorded crimes, with theft leading by a substantial margin.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"35","Medium","What is the arrest rate for each crime category?","SELECT ""CRIME_CATEGORY"", ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct FROM crime_incidents GROUP BY ""CRIME_CATEGORY"" ORDER BY arrest_rate_pct DESC;","","I’m sorry, but I don’t have the information needed to answer that question. If you have any other topics I can help with, feel free to let me know!","Relevance: Rejected - missing action verb or data context"
+"36","Medium","What is the monthly crime count for 2023?","SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS crime_count FROM crime_incidents WHERE ""YEAR"" = 2023 GROUP BY month ORDER BY month;","SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"")::INT AS month,
+       COUNT(*) AS crime_count
+FROM crime_incidents
+WHERE ""YEAR"" = 2023
+GROUP BY month
+ORDER BY month;","**Monthly Crime Count for 2023**
+
+| Month | Crimes Reported |
+|-------|-----------------|
+| January   | 21,341 |
+| February  | 18,489 |
+| March     | 20,812 |
+| April     | 20,812 |
+| May       | 22,290 |
+| June      | 22,770 |
+| July      | 24,064 |
+| August    | 24,238 |
+| September | 22,657 |
+| October   | 23,104 |
+| November  | 21,434 |
+| December  | 21,332 |
+
+**Key take‑aways**
+
+- The highest number of crimes occurred in **August** (24,238), closely followed by **July** (24,064).  
+- The lowest count was in **February** (18,489).  
+- Crime counts were relatively stable, ranging from about 18.5 k to 24.2 k per month, with a slight upward trend from the first half to the second half of the year.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"37","Medium","Which 5 districts (by name) have the highest number of arrests?","SELECT dn.district_name, COUNT(*) AS arrest_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""ARREST"" = TRUE GROUP BY dn.district_name ORDER BY arrest_count DESC LIMIT 5;","","I’m sorry, but I can’t help with that request. If you have any other questions, feel free to ask!","Relevance: Rejected - missing action verb or data context"
+"38","Medium","How many crimes occurred on each day of the week?","SELECT EXTRACT(DOW FROM ""INCIDENT_DATE"") AS day_of_week, COUNT(*) AS crime_count FROM crime_incidents GROUP BY day_of_week ORDER BY day_of_week;","SELECT TRIM(TO_CHAR(""INCIDENT_DATE"", 'Day')) AS day_of_week,
+       COUNT(*) AS crime_count
+FROM crime_incidents
+GROUP BY TRIM(TO_CHAR(""INCIDENT_DATE"", 'Day'))
+ORDER BY day_of_week;","The query shows the total number of crimes recorded for each day of the week:
+
+- **Friday:** 1,294,492 crimes (the highest count)  
+- **Wednesday:** 1,240,792 crimes  
+- **Saturday:** 1,240,332 crimes  
+- **Tuesday:** 1,233,906 crimes  
+- **Thursday:** 1,228,856 crimes  
+- **Monday:** 1,223,363 crimes  
+- **Sunday:** 1,181,752 crimes (the lowest count)
+
+In short, Friday experienced the most crimes, while Sunday had the fewest.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"39","Medium","How many crimes are there for each severity level?","SELECT ""CRIME_SEVERITY_LEVEL"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_SEVERITY_LEVEL"" ORDER BY crime_count DESC;","SELECT ""CRIME_SEVERITY_LEVEL"" AS severity_level, COUNT(*) AS crime_count
+FROM crime_incidents
+GROUP BY ""CRIME_SEVERITY_LEVEL"";","The query shows the total number of crimes broken down by severity level:
+
+- **Low severity:** 5,141,855 crimes  
+- **Medium severity:** 2,632,888 crimes  
+- **Variable severity:** 840,824 crimes  
+- **High severity:** 27,926 crimes  
+
+In other words, the vast majority of recorded crimes are classified as low severity, followed by medium, variable, and a relatively small number are marked as high severity.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"40","Medium","Which 3 wards (by name) have the most domestic violence crimes?","SELECT wn.ward_name, COUNT(*) AS domestic_count FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id WHERE ci.""DOMESTIC"" = TRUE GROUP BY wn.ward_name ORDER BY domestic_count DESC LIMIT 3;","SELECT wn.ward_name,
+       COUNT(*) AS domestic_crime_count
+FROM crime_incidents ci
+JOIN ward_names wn
+  ON ci.""WARD"" = wn.ward_id
+WHERE ci.""DOMESTIC"" = TRUE
+GROUP BY wn.ward_name
+ORDER BY domestic_crime_count DESC
+LIMIT 3;","The three wards with the highest number of domestic‑violence crimes are:
+
+1. **Austin / East Garfield Park / Humboldt Park** – 68,736 incidents  
+2. **Ashburn / Auburn Gresham / West Englewood** – 67,005 incidents  
+3. **North Lawndale / East Garfield Park** – 65,225 incidents.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"41","Medium","What percentage of violent crimes resulted in an arrest?","SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct FROM crime_incidents WHERE ""VIOLENT_CRIME_FLAG"" = 1;","WITH violent AS (
+    SELECT
+        COUNT(*) AS total,
+        COUNT(*) FILTER (WHERE ""ARREST"" = TRUE) AS arrested
+    FROM crime_incidents
+    WHERE ""VIOLENT_CRIME_FLAG"" = 1
+)
+SELECT ROUND(100.0 * arrested / NULLIF(total, 0), 2) AS violent_arrest_percentage
+FROM violent;","The data shows that **19.65 %** of violent crimes resulted in an arrest.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"42","Medium","Which districts (by name) had more than 20000 crimes in 2024?","SELECT dn.district_name, COUNT(*) AS crime_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""YEAR"" = 2024 GROUP BY dn.district_name HAVING COUNT(*) > 20000 ORDER BY crime_count DESC;","","I’m sorry, but I can’t answer that question as it falls outside the scope of what I can help with here. If you have any other type of inquiry, feel free to ask!","Relevance: Rejected - missing action verb or data context"
+"43","Medium","What are the top 5 community areas (by name) with the highest property crime counts?","SELECT can.community_area_name, COUNT(*) AS property_crime_count FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id WHERE ci.""PROPERTY_CRIME_FLAG"" = 1 GROUP BY can.community_area_name ORDER BY property_crime_count DESC LIMIT 5;","SELECT ca.community_area_name,
+       COUNT(*) AS property_crime_count
+FROM crime_incidents ci
+JOIN community_area_names ca
+  ON ci.""COMMUNITY_AREA"" = ca.community_area_id
+WHERE ci.""PROPERTY_CRIME_FLAG"" = 1
+GROUP BY ca.community_area_name
+ORDER BY property_crime_count DESC
+LIMIT 5;","The query identified the five Chicago community areas with the most reported property crimes. In descending order, they are:
+
+1. **Near North Side** – 208,285 incidents  
+2. **Austin** – 206,628 incidents  
+3. **Near West Side** – 168,426 incidents  
+4. **West Town** – 165,314 incidents  
+5. **Loop** – 161,591 incidents  
+
+These areas have the highest property‑crime counts among all community areas in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"44","Medium","Which year had the highest number of homicide offenses?","SELECT ""YEAR"", COUNT(*) AS homicide_count FROM crime_incidents WHERE ""CRIME_OFFENSE_GROUP"" = 'Homicide' GROUP BY ""YEAR"" ORDER BY homicide_count DESC LIMIT 1;","","I’m sorry, but I can’t answer that question as it falls outside the scope of what I can help with here. If you have any other type of inquiry, feel free to ask!","Relevance: Rejected - missing action verb or data context"
+"45","Medium","How many distinct blocks had at least one weapon-related crime?","SELECT COUNT(DISTINCT ""BLOCK"") AS block_count FROM crime_incidents WHERE ""WEAPON_CRIME_FLAG"" = 1;","SELECT COUNT(DISTINCT ""BLOCK"") AS distinct_blocks_with_weapon_crime
+FROM crime_incidents
+WHERE ""WEAPON_CRIME_FLAG"" = 1;","The query found **23,973 distinct blocks** that recorded at least one weapon‑related crime.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"46","Medium","How many crimes fall under each FBI classification?","SELECT ""CRIME_FBI_CLASSIFICATION"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_FBI_CLASSIFICATION"" ORDER BY crime_count DESC;","SELECT ""CRIME_FBI_CLASSIFICATION"" AS fbi_classification, COUNT(*) AS crime_count
+FROM crime_incidents
+GROUP BY ""CRIME_FBI_CLASSIFICATION"";","The dataset contains the following counts of crimes by FBI classification:
+
+- **Property Crime:** 4,910,851 incidents  
+- **Violent Crime:** 2,526,538 incidents  
+- **Drug Crime:** 785,730 incidents  
+- **Weapons Crime:** 131,571 incidents  
+- **Sex Crime:** 168,422 incidents  
+- **Public Order Crime:** 92,903 incidents  
+- **Other Crime:** 27,478 incidents  
+
+These figures show that property crimes are the most common, followed by violent crimes, while “Other Crime” is the least common category.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"47","Medium","What are the top 5 crime offense subtypes among drug crimes?","SELECT ""CRIME_OFFENSE_SUBTYPE"", COUNT(*) AS crime_count FROM crime_incidents WHERE ""DRUG_CRIME_FLAG"" = 1 GROUP BY ""CRIME_OFFENSE_SUBTYPE"" ORDER BY crime_count DESC LIMIT 5;","SELECT ""CRIME_OFFENSE_SUBTYPE"", COUNT(*) AS incident_count
+FROM crime_incidents
+WHERE ""DRUG_CRIME_FLAG"" = 1
+GROUP BY ""CRIME_OFFENSE_SUBTYPE""
+ORDER BY incident_count DESC
+LIMIT 5;","The five most frequently reported drug‑crime offenses are:
+
+1. **Possession of cannabis (30 g or less)** – 278,136 incidents  
+2. **Possession of crack** – 121,109 incidents  
+3. **Possession of heroin (white)** – 95,786 incidents  
+4. **Solicitation of narcotics on a public way** – 27,854 incidents  
+5. **Manufacture/delivery of heroin (white)** – 26,444 incidents  
+
+These subtypes together account for the largest share of drug‑related crimes in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"48","Medium","How many violent-category crimes occurred each year?","SELECT ""YEAR"", COUNT(*) AS violent_count FROM crime_incidents WHERE ""CRIME_CATEGORY"" = 'Violent' GROUP BY ""YEAR"" ORDER BY ""YEAR"";","SELECT ""YEAR"" AS year, COUNT(*) AS violent_crime_count
+FROM crime_incidents
+WHERE ""VIOLENT_CRIME_FLAG"" = 1
+GROUP BY ""YEAR""
+ORDER BY ""YEAR"";","**Summary of violent‑category crimes by year (2001‑2026)**  
+
+| Year | Violent crimes |
+|------|----------------|
+| 2001 | 145,441 |
+| 2002 | **146,277** (peak) |
+| 2003 | 137,174 |
+| 2004 | 133,527 |
+| 2005 | 128,435 |
+| 2006 | 123,927 |
+| 2007 | 122,676 |
+| 2008 | 119,481 |
+| 2009 | 108,524 |
+| 2010 | 102,441 |
+| 2011 | 95,994 |
+| 2012 | 93,732 |
+| 2013 | 84,875 |
+| 2014 | 77,186 |
+| 2015 | 76,756 |
+| 2016 | 82,498 |
+| 2017 | 81,904 |
+| 2018 | 81,483 |
+| 2019 | 80,083 |
+| 2020 | 70,110 |
+| 2021 | 71,697 |
+| 2022 | 73,870 |
+| 2023 | 81,179 |
+| 2024 | 81,750 |
+| 2025 | 72,882 |
+| 2026 | 52,636 |
+
+**Key points**
+
+* **Overall trend:** The number of violent crimes fell steadily from the early 2000s (≈146 k in 2002) to a low around the mid‑2010s (≈76 k in 2015).  
+* **Recent pattern:** After 2015 the counts rose again, reaching the low‑80 k range in 2016‑2024, dipped in 2020 (likely reflecting pandemic‑related reporting changes), recovered in 2021‑2024, then dropped sharply in 2025‑2026 (2026 may be incomplete).  
+* **Peak and trough:**  
+  * Highest annual total: **2002 – 146,277** crimes.  
+  * Lowest annual total (so far): **2026 – 52,636** crimes.  
+* **Cumulative volume:** Over the 26‑year span, there were **≈2.53 million** violent‑category crimes, averaging **≈97,000 per year**.  
+
+In short, violent‑category crime counts have declined markedly since the early 2000s, stabilized at a lower level in the mid‑2010s, experienced a modest rebound in the late 2010s‑early 2020s, and show a recent downward swing.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"49","Medium","Which district (by name) had the most arrests in 2023?","SELECT dn.district_name, COUNT(*) AS arrest_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""ARREST"" = TRUE AND ci.""YEAR"" = 2023 GROUP BY dn.district_name ORDER BY arrest_count DESC LIMIT 1;","SELECT dn.district_name,
+       COUNT(*) AS arrest_count
+FROM crime_incidents ci
+JOIN district_names dn
+  ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" = 2023
+  AND ci.""ARREST"" = TRUE
+GROUP BY dn.district_name
+ORDER BY arrest_count DESC
+LIMIT 1;","In 2023, the Harrison district recorded the highest number of arrests, totaling **3,508** arrests.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"50","Medium","How many crimes fall into each location risk category?","SELECT ""LOCATION_RISK_CATEGORY"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""LOCATION_RISK_CATEGORY"" ORDER BY crime_count DESC;","SELECT ""LOCATION_RISK_CATEGORY"" AS location_risk_category, COUNT(*) AS crime_count
+FROM crime_incidents
+GROUP BY ""LOCATION_RISK_CATEGORY"";","The query shows the total number of crimes recorded for each location‑risk category:
+
+- **High Risk:** 3,228,554 crimes  
+- **Medium Risk:** 2,810,256 crimes  
+- **Low Risk:** 2,604,683 crimes  
+
+Thus, high‑risk locations have the highest count of crimes, followed by medium‑risk and then low‑risk locations.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"51","Medium","What percentage of domestic crimes resulted in an arrest?","SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct FROM crime_incidents WHERE ""DOMESTIC"" = TRUE;","SELECT ROUND(100.0 * COUNT(*) FILTER (WHERE ""ARREST"") / NULLIF(COUNT(*), 0), 2) AS domestic_arrest_percentage
+FROM crime_incidents
+WHERE ""DOMESTIC"" = TRUE;","The query shows that **19.16 %** of domestic crimes resulted in an arrest.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"52","Medium","How many crimes fall into each combination of arrest and domestic status?","SELECT ""ARREST"", ""DOMESTIC"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""ARREST"", ""DOMESTIC"" ORDER BY crime_count DESC;","SELECT ""ARREST"", ""DOMESTIC"", COUNT(*) AS crime_count
+FROM crime_incidents
+GROUP BY ""ARREST"", ""DOMESTIC"";","The query groups crimes by two Boolean flags – **Arrest** (whether an arrest was made) and **Domestic** (whether the incident was classified as domestic) – and counts the number of records in each group.
+
+| Arrest | Domestic | Number of crimes |
+|--------|----------|------------------|
+| **False** | **False** | **5,274,445** |
+| **False** | **True**  | **1,210,151** |
+| **True**  | **False** | **1,872,074** |
+| **True**  | **True**  | **286,823**   |
+
+**Interpretation**
+
+- The vast majority of crimes (5.27 million) are neither resulting in an arrest nor classified as domestic.
+- About 1.21 million crimes are domestic incidents without an arrest.
+- Approximately 1.87 million crimes involve an arrest but are not domestic.
+- Only 286 k crimes are both domestic and result in an arrest.
+
+Overall, the dataset contains **8,643,493** crime records across these four arrest‑domestic status combinations.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"53","Medium","What are the top 5 blocks with the most arrests?","SELECT ""BLOCK"", COUNT(*) AS arrest_count FROM crime_incidents WHERE ""ARREST"" = TRUE GROUP BY ""BLOCK"" ORDER BY arrest_count DESC LIMIT 5;","SELECT ""BLOCK"" AS block, COUNT(*) AS arrest_count
+FROM crime_incidents
+WHERE ""ARREST"" = TRUE
+GROUP BY ""BLOCK""
+ORDER BY arrest_count DESC
+LIMIT 5;","The query identified the five street‑block locations with the highest number of arrests. The block with the most arrests is **001XX N STATE ST**, recording **9,346** arrests. It is followed by **0000X N STATE ST** with **4,918** arrests, **076XX S CICERO AVE** with **4,739** arrests, **100XX W OHARE ST** with **4,457** arrests, and **033XX W FILLMORE ST** with **4,160** arrests.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"54","Medium","How many crimes were recorded in each quarter of 2022?","SELECT EXTRACT(QUARTER FROM ""INCIDENT_DATE"") AS quarter, COUNT(*) AS crime_count FROM crime_incidents WHERE ""YEAR"" = 2022 GROUP BY quarter ORDER BY quarter;","SELECT EXTRACT(QUARTER FROM ""INCIDENT_DATE"")::INT AS quarter,
+       COUNT(*) AS crime_count
+FROM crime_incidents
+WHERE ""YEAR"" = 2022
+GROUP BY EXTRACT(QUARTER FROM ""INCIDENT_DATE"")
+ORDER BY quarter;","In 2022, the number of recorded crimes rose steadily through the first three quarters before dipping slightly in the fourth:
+
+- **Q1:** 49,509 crimes  
+- **Q2:** 59,183 crimes  
+- **Q3:** 67,197 crimes (the highest count)  
+- **Q4:** 64,181 crimes  
+
+Overall, crime reports increased from the first to the third quarter, with a modest decline in the final quarter.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"55","Medium","What are the top 5 wards (by name) by number of arrests?","SELECT wn.ward_name, COUNT(*) AS arrest_count FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id WHERE ci.""ARREST"" = TRUE GROUP BY wn.ward_name ORDER BY arrest_count DESC LIMIT 5;","SELECT wn.ward_name,
+       COUNT(*) AS arrest_count
+FROM crime_incidents ci
+JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+WHERE ci.""ARREST"" = TRUE
+GROUP BY wn.ward_name
+ORDER BY arrest_count DESC
+LIMIT 5;","The query shows the five wards with the highest arrest counts:
+
+1. **Austin / East Garfield Park / Humboldt Park** – 145,511 arrests  
+2. **North Lawndale / East Garfield Park** – 116,216 arrests  
+3. **East Garfield Park / Near West Side / West Town** – 95,294 arrests  
+4. **River North / Gold Coast / Near North** – 77,254 arrests  
+5. **Bronzeville / Douglas / Grand Boulevard** – 74,495 arrests  
+
+These wards rank as the top five in terms of total arrests, with Austin/East Garfield Park/Humboldt Park leading by a substantial margin.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"56","Medium","How many weapon-flagged crimes occurred each year?","SELECT ""YEAR"", COUNT(*) AS weapon_crime_count FROM crime_incidents WHERE ""WEAPON_CRIME_FLAG"" = 1 GROUP BY ""YEAR"" ORDER BY ""YEAR"";","SELECT ""YEAR"" AS year, COUNT(*) AS weapon_crime_count
+FROM crime_incidents
+WHERE ""WEAPON_CRIME_FLAG"" = 1
+GROUP BY ""YEAR""
+ORDER BY ""YEAR"";","**Summary of Weapon‑Flagged Crimes by Year (2001‑2026)**  
+
+| Year | Weapon‑flagged crimes |
+|------|----------------------|
+| 2001 | 4,279 |
+| 2002 | 4,282 |
+| 2003 | 4,211 |
+| 2004 | 4,298 |
+| 2005 | 4,106 |
+| 2006 | 3,821 |
+| 2007 | 3,554 |
+| 2008 | 3,877 |
+| 2009 | 4,159 |
+| 2010 | 3,704 |
+| 2011 | 3,880 |
+| 2012 | 3,907 |
+| 2013 | 3,245 |
+| 2014 | 3,128 |
+| 2015 | 3,398 |
+| 2016 | 3,486 |
+| 2017 | 4,755 |
+| 2018 | 5,605 |
+| 2019 | 6,556 |
+| 2020 | 8,581 |
+| 2021 | 9,152 |
+| 2022 | 8,958 |
+| 2023 | 8,813 |
+| 2024 | 8,035 |
+| 2025 | 5,722 |
+| 2026 | 4,059 |
+
+### Key observations
+1. **Overall trend:** The count of weapon‑flagged crimes was relatively stable around 3,000‑4,300 per year from 2001 through 2016, with a modest dip in the early 2010s.
+2. **Sharp rise beginning in 2017:** Starting in 2017, the numbers began climbing rapidly, reaching **4,755** in 2017 and **5,605** in 2018.
+3. **Peak period (2020‑2022):** The steepest increase occurred in 2020, jumping to **8,581** crimes, and peaking in 2021 at **9,152**. 2022 remained high at **8,958**.
+4. **Gradual decline after 2022:** After the 2021‑2022 peak, the counts fell each year, dropping to **8,813** in 2023, **8,035** in 2024, **5,722** in 2025, and **4,059** in 2026.
+5. **Recent levels:** By 2026, the total had returned close to the pre‑2017 range, sitting just above 4,000—still higher than the lowest point (3,128 in 2014) but far below the 2021 peak.
+
+**Bottom line:** Weapon‑flagged crimes were relatively steady for the first 15 years, surged dramatically from 2017 onward, peaked in 2021, and have been trending downward since 2022, though they remain above the early‑2000s baseline.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"57","Medium","Which 5 districts (by name) have the most robbery offenses?","SELECT dn.district_name, COUNT(*) AS robbery_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""CRIME_OFFENSE_GROUP"" = 'Robbery' GROUP BY dn.district_name ORDER BY robbery_count DESC LIMIT 5;","SELECT dn.district_name,
+       COUNT(*) AS robbery_count
+FROM crime_incidents ci
+JOIN district_names dn
+  ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""CRIME_TYPE"" = 'ROBBERY'
+GROUP BY dn.district_name
+ORDER BY robbery_count DESC
+LIMIT 5;","The five districts with the highest number of robbery offenses are:
+
+1. **Gresham** – 24,083 robberies  
+2. **Harrison** – 23,667 robberies  
+3. **Chicago Lawn** – 21,716 robberies  
+4. **Englewood** – 20,243 robberies  
+5. **Grand Crossing** – 19,443 robberies  
+
+These districts account for the largest share of robbery incidents in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"58","Medium","How many distinct districts reported at least one crime in each year?","SELECT ""YEAR"", COUNT(DISTINCT ""DISTRICT"") AS district_count FROM crime_incidents GROUP BY ""YEAR"" ORDER BY ""YEAR"";","WITH total_years AS (
+  SELECT COUNT(DISTINCT ""YEAR"") AS yr_cnt
+  FROM crime_incidents
+),
+district_years AS (
+  SELECT ""DISTRICT"", COUNT(DISTINCT ""YEAR"") AS yr_cnt
+  FROM crime_incidents
+  GROUP BY ""DISTRICT""
+)
+SELECT COUNT(*) AS districts_with_all_years
+FROM district_years dy
+CROSS JOIN total_years ty
+WHERE dy.yr_cnt = ty.yr_cnt;","The query shows that **22 distinct districts** reported at least one crime in every year.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"59","Medium","How many domestic crimes occurred each month in 2024?","SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS domestic_count FROM crime_incidents WHERE ""YEAR"" = 2024 AND ""DOMESTIC"" = TRUE GROUP BY month ORDER BY month;","SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"")::int AS month,
+       COUNT(*) AS domestic_crime_count
+FROM crime_incidents
+WHERE ""DOMESTIC"" = TRUE
+  AND EXTRACT(YEAR FROM ""INCIDENT_DATE"") = 2024
+GROUP BY month
+ORDER BY month;","**Domestic crimes in 2024 – monthly breakdown**
+
+| Month | Crimes |
+|-------|--------|
+| January | 3,654 |
+| February | 3,616 |
+| March | 3,836 |
+| April | 3,865 |
+| May | **4,414** |
+| June | 4,332 |
+| July | 4,389 |
+| August | 3,968 |
+| September | 4,167 |
+| October | 3,948 |
+| November | **3,591** |
+| December | 3,828 |
+
+**Key points**
+
+- A total of **47,608 domestic crimes** were recorded in 2024.  
+- **May** saw the highest number of incidents (4,414), while **November** had the fewest (3,591).  
+- The monthly counts are relatively stable, ranging from roughly 3,600 to 4,400 incidents, with a slight dip in the early‑year months (January–February) and again in November.  
+
+Overall, domestic crime occurrences remained fairly consistent throughout the year, with a modest peak in late spring/early summer.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"60","Medium","What are the top 5 crime offense labels by count?","SELECT ""CRIME_OFFENSE_LABEL"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""CRIME_OFFENSE_LABEL"" ORDER BY crime_count DESC LIMIT 5;","SELECT ""CRIME_OFFENSE_LABEL"", COUNT(*) AS incident_count
+FROM crime_incidents
+GROUP BY ""CRIME_OFFENSE_LABEL""
+ORDER BY incident_count DESC
+LIMIT 5;","The query returns the five most frequently recorded crime offenses, ranked by the number of incidents:
+
+1. **THEFT – $500 AND UNDER** (code 0820) – **689,726** occurrences.  
+2. **BATTERY – DOMESTIC BATTERY SIMPLE** (code 0486) – **675,987** occurrences.  
+3. **BATTERY – SIMPLE** (code 0460) – **615,486** occurrences.  
+4. **THEFT – OVER $500** (code 0810) – **470,569** occurrences.  
+5. **CRIMINAL DAMAGE – TO VEHICLE** (code 1320) – **470,184** occurrences.  
+
+These five categories together account for the largest share of recorded crimes in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"61","Medium","How many High severity crimes did not result in an arrest?","SELECT COUNT(*) AS no_arrest_count FROM crime_incidents WHERE ""CRIME_SEVERITY_LEVEL"" = 'High' AND ""ARREST"" = FALSE;","SELECT COUNT(*) AS high_severity_no_arrest_count
+FROM crime_incidents
+WHERE ""CRIME_SEVERITY_LEVEL"" = 'High' AND ""ARREST"" = FALSE;","The query shows that **20,067** high‑severity crimes did not result in an arrest.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"62","Medium","Which community areas (by name) had more than 5000 property crimes?","SELECT can.community_area_name, COUNT(*) AS property_crime_count FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id WHERE ci.""PROPERTY_CRIME_FLAG"" = 1 GROUP BY can.community_area_name HAVING COUNT(*) > 5000 ORDER BY property_crime_count DESC;","","I’m sorry, but I don’t have the information needed to answer that question. If you have another query I can help with, please let me know!","Relevance: Rejected - missing action verb or data context"
+"64","Medium","Which year had the highest total number of arrests?","SELECT ""YEAR"", COUNT(*) AS arrest_count FROM crime_incidents WHERE ""ARREST"" = TRUE GROUP BY ""YEAR"" ORDER BY arrest_count DESC LIMIT 1;","SELECT ""YEAR""
+FROM (
+    SELECT ""YEAR"", COUNT(*) AS arrests_count
+    FROM crime_incidents
+    WHERE ""ARREST"" = TRUE
+    GROUP BY ""YEAR""
+) AS yearly_arrests
+ORDER BY arrests_count DESC
+LIMIT 1;","The data indicates that the year with the highest total number of arrests was **2004**.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"65","Medium","What are the top 5 crime types by number of distinct case numbers?","SELECT ""CRIME_TYPE"", COUNT(DISTINCT ""CASE_NUMBER"") AS case_count FROM crime_incidents GROUP BY ""CRIME_TYPE"" ORDER BY case_count DESC LIMIT 5;","SELECT ""CRIME_TYPE"", COUNT(DISTINCT ""CASE_NUMBER"") AS distinct_case_count
+FROM crime_incidents
+GROUP BY ""CRIME_TYPE""
+ORDER BY distinct_case_count DESC
+LIMIT 5;","The query shows the five most common crime categories, ranked by the number of unique case numbers:
+
+1. **Theft** – 1,835,130 distinct cases  
+2. **Battery** – 1,575,457 distinct cases  
+3. **Criminal Damage** – 982,294 distinct cases  
+4. **Narcotics** – 769,985 distinct cases  
+5. **Assault** – 584,284 distinct cases  
+
+These five offenses account for the highest counts of individual cases in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"66","Medium","What are the top 5 districts (by name) by number of drug crimes?","SELECT dn.district_name, COUNT(*) AS drug_crime_count FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id WHERE ci.""DRUG_CRIME_FLAG"" = 1 GROUP BY dn.district_name ORDER BY drug_crime_count DESC LIMIT 5;","SELECT dn.district_name,
+       COUNT(*) AS drug_crime_count
+FROM crime_incidents ci
+JOIN district_names dn
+  ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""DRUG_CRIME_FLAG"" = 1
+GROUP BY dn.district_name
+ORDER BY drug_crime_count DESC
+LIMIT 5;","The query identified the five districts with the highest counts of drug‑related offenses. Harrison leads the list with 139,914 drug crimes, followed by Austin (82,548), Englewood (53,431), Ogden (50,150), and Gresham (41,201). These districts represent the top five in terms of drug‑crime volume.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"67","Medium","How many public order crimes occurred each year?","SELECT ""YEAR"", COUNT(*) AS public_order_count FROM crime_incidents WHERE ""CRIME_CATEGORY"" = 'Public order' GROUP BY ""YEAR"" ORDER BY ""YEAR"";","SELECT ""YEAR"", COUNT(*) AS public_order_crime_count
+FROM crime_incidents
+WHERE ""CRIME_CATEGORY"" = 'Public Order'
+GROUP BY ""YEAR""
+ORDER BY ""YEAR"";","The query returned no data, indicating that there are no recorded counts of public‑order crimes by year in the result set. In other words, the dataset does not contain any entries for public‑order crimes broken down by year.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"68","Medium","What are the top 5 wards (by name) by number of weapon crimes?","SELECT wn.ward_name, COUNT(*) AS weapon_crime_count FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id WHERE ci.""WEAPON_CRIME_FLAG"" = 1 GROUP BY wn.ward_name ORDER BY weapon_crime_count DESC LIMIT 5;","SELECT wn.ward_name,
+       COUNT(*) AS weapon_crime_count
+FROM crime_incidents ci
+JOIN ward_names wn ON wn.ward_id = ci.""WARD""
+WHERE ci.""WEAPON_CRIME_FLAG"" = 1
+GROUP BY wn.ward_name
+ORDER BY weapon_crime_count DESC
+LIMIT 5;","The query identified the five wards with the highest counts of weapon‑related crimes. In descending order, they are:
+
+1. **Austin / East Garfield Park / Humboldt Park** – 7,710 incidents  
+2. **North Lawndale / East Garfield Park** – 7,497 incidents  
+3. **Ashburn / Auburn Gresham / West Englewood** – 6,876 incidents  
+4. **Woodlawn / Chatham / South Shore** – 6,458 incidents  
+5. **Auburn Gresham / Chatham / Englewood** – 6,236 incidents  
+
+These wards account for the largest share of weapon crimes in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"69","Medium","How many Low severity crimes occurred each year?","SELECT ""YEAR"", COUNT(*) AS low_severity_count FROM crime_incidents WHERE ""CRIME_SEVERITY_LEVEL"" = 'Low' GROUP BY ""YEAR"" ORDER BY ""YEAR"";","SELECT ""YEAR"" AS year, COUNT(*) AS low_severity_crime_count
+FROM crime_incidents
+WHERE ""CRIME_SEVERITY_LEVEL"" = 'Low'
+GROUP BY ""YEAR""
+ORDER BY ""YEAR"";","**Summary of Low‑Severity Crimes by Year (2001‑2026)**  
+
+| Year | Low‑severity crimes |
+|------|---------------------|
+| 2001 | 289,147 |
+| 2002 | 285,852 |
+| 2003 | 285,666 |
+| 2004 | 283,228 |
+| 2005 | 275,729 |
+| 2006 | 274,586 |
+| 2007 | 265,852 |
+| 2008 | 261,068 |
+| 2009 | 240,001 |
+| 2010 | 229,003 |
+| 2011 | 219,140 |
+| 2012 | 208,736 |
+| 2013 | 189,560 |
+| 2014 | 166,911 |
+| 2015 | 156,426 |
+| 2016 | 157,554 |
+| 2017 | 156,345 |
+| 2018 | 155,644 |
+| 2019 | 149,280 |
+| 2020 | 115,426 |
+| 2021 | 110,162 |
+| 2022 | 137,588 |
+| 2023 | 152,258 |
+| 2024 | 146,699 |
+| 2025 | 136,290 |
+| 2026 | 93,704 |
+
+### Key observations  
+
+1. **Overall downward trend:**  
+   - The count fell from a high of **289,147 in 2001** to a low of **93,704 in 2026**, a reduction of roughly **67 %** over the 26‑year span.
+
+2. **Steady decline through 2019:**  
+   - From 2001 to 2019 the numbers dropped almost every year, moving from the high‑200‑k range to the mid‑100‑k range.
+
+3. **Sharp dip during the pandemic years (2020‑2021):**  
+   - 2020 saw a dramatic drop to **115,426**, and 2021 fell further to **110,162**, likely reflecting reduced reporting or activity during COVID‑19 restrictions.
+
+4. **Partial rebound after 2021:**  
+   - 2022 rebounded to **137,588**, and 2023 peaked again at **152,258**, indicating a recovery in low‑severity crime reporting/occurrence.
+
+5. **Recent decline again:**  
+   - After the 2023 rebound, the counts fell each subsequent year, reaching **93,704 in 2026**, the lowest value in the entire series.
+
+### Bottom line  
+
+Low‑severity crimes have generally been decreasing from 2001 to 2026, with a notable pandemic‑related dip in 2020‑2021 and a brief resurgence in 2022‑2023 before continuing the downward trajectory.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"70","Medium","What is the percentage breakdown of crimes by crime category?","SELECT ""CRIME_CATEGORY"", COUNT(*) AS crime_count, ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS pct_of_total FROM crime_incidents GROUP BY ""CRIME_CATEGORY"" ORDER BY crime_count DESC;","SELECT
+    ""CRIME_CATEGORY"" AS crime_category,
+    ROUND(100.0 * COUNT(*) / NULLIF((SELECT COUNT(*) FROM crime_incidents), 0), 2) AS percentage
+FROM crime_incidents
+GROUP BY ""CRIME_CATEGORY""
+ORDER BY percentage DESC;","The crime data shows that **property offenses dominate**, accounting for roughly **56.8 %** of all incidents. The next largest share is **violent crimes** at about **29.2 %**. **Drug‑related offenses** make up **9.1 %**, while **sex offenses** represent **≈2 %**. Smaller categories include **weapons offenses (≈1.5 %)**, **public‑order offenses (≈1.1 %)**, and an **“Other” group (≈0.3 %)**. Together, these percentages sum to 100 % of the recorded crimes.","Relevance: Approved | Validator: SQL syntax error: (psycopg2.errors.GroupingError) column ""total.total_cnt"" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 7:     ROUND(100.0 * COUNT(*) / NULLIF(total.total_cnt, 0), 2) ...
+                                            ^
+
+[SQL: EXPLAIN WITH total AS (
+    SELECT COUNT(*) AS total_cnt
+    FROM crime_incidents
+)
+SELECT 
+    ""CRIME_CATEGORY"" AS crime_category,
+    ROUND(100.0 * COUNT(*) / NULLIF(total.total_cnt, 0), 2) AS percentage
+FROM crime_incidents
+CROSS JOIN total
+GROUP BY ""CRIME_CATEGORY""
+ORDER BY percentage DESC;]
+(Background on this error at: https://sqlalche.me/e/20/f405) | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"71","Hard","For each district (by name), what is the single most common crime offense group?","WITH ranked AS (
+  SELECT dn.district_name, ci.""CRIME_OFFENSE_GROUP"", COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY dn.district_name ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+  GROUP BY dn.district_name, ci.""CRIME_OFFENSE_GROUP""
+)
+SELECT district_name, ""CRIME_OFFENSE_GROUP"", crime_count FROM ranked WHERE rn = 1 ORDER BY district_name;","WITH offense_counts AS (
+    SELECT d.district_name,
+           ci.""CRIME_OFFENSE_GROUP"",
+           COUNT(*) AS incident_count,
+           ROW_NUMBER() OVER (PARTITION BY d.district_name ORDER BY COUNT(*) DESC) AS rn
+    FROM crime_incidents ci
+    JOIN district_names d
+      ON ci.""DISTRICT"" = d.district_id
+    GROUP BY d.district_name, ci.""CRIME_OFFENSE_GROUP""
+)
+SELECT district_name,
+       ""CRIME_OFFENSE_GROUP"" AS most_common_offense_group,
+       incident_count
+FROM offense_counts
+WHERE rn = 1
+ORDER BY district_name;","**Most‑common crime offense group by Chicago police district (name – offense – annual count)**  
+
+- Albany Park – Theft – **63,256**  
+- Austin – Drug offense – **82,548**  
+- Calumet – Battery – **70,475**  
+- Central – Theft – **153,181**  
+- Chicago Lawn – Theft – **112,564**  
+- Deering – Theft – **75,796**  
+- Englewood – Battery – **97,313**  
+- Grand Central – Theft – **91,338**  
+- Grand Crossing – Battery – **79,881**  
+- Gresham – Theft – **86,788**  
+- Harrison – Drug offense – **139,914**  
+- Homan Square – Theft – **51** (the only recorded offenses for this tiny district)  
+- Jefferson Park – Theft – **68,709**  
+- Lincoln – Theft – **41,026**  
+- Morgan Park – Theft – **54,344**  
+- Near North – Theft – **164,869**  
+- Near West – Theft – **125,310**  
+- Ogden – Battery – **66,553**  
+- Rogers Park – Theft – **63,328**  
+- Shakespeare – Theft – **97,046**  
+- South Chicago – Battery – **84,989**  
+- Town Hall – Theft – **135,596**  
+- Wentworth – Theft – **83,176**  
+
+**Key take‑aways**
+
+- **Theft** dominates in the majority of districts (17 out of 23).  
+- **Battery** is the leading offense in five districts (Calumet, Englewood, Grand Crossing, Ogden, South Chicago).  
+- **Drug offenses** top the list only in two districts (Austin and Harrison).  
+- The highest single‑district count is **Theft in Near North (164,869)**, while the lowest is **Theft in Homan Square (51)**.  
+
+Overall, theft is the most prevalent crime across Chicago’s police districts, with battery and drug offenses leading only in a handful of areas.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"72","Hard","For each year, which district (by name) had the most crimes?","WITH ranked AS (
+  SELECT ci.""YEAR"", dn.district_name, COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY ci.""YEAR"" ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+  GROUP BY ci.""YEAR"", dn.district_name
+)
+SELECT ""YEAR"", district_name, crime_count FROM ranked WHERE rn = 1 ORDER BY ""YEAR"";","WITH yearly_counts AS (
+    SELECT 
+        ci.""YEAR"" AS yr,
+        dn.district_name,
+        COUNT(*) AS crime_count
+    FROM crime_incidents ci
+    JOIN district_names dn
+        ON ci.""DISTRICT"" = dn.district_id
+    GROUP BY ci.""YEAR"", dn.district_name
+)
+SELECT 
+    yr AS ""YEAR"",
+    district_name,
+    crime_count
+FROM (
+    SELECT 
+        yr,
+        district_name,
+        crime_count,
+        ROW_NUMBER() OVER (PARTITION BY yr ORDER BY crime_count DESC) AS rn
+    FROM yearly_counts
+) ranked
+WHERE rn = 1
+ORDER BY yr;","**Summary of the district with the highest crime count for each year**
+
+- **2001:** Wentworth – 35,413 crimes  
+- **2002‑2012:** Chicago Lawn – crime counts ranged from 32,101 (2002) down to 22,728 (2012)  
+- **2013‑2021:** Harrison – crime counts fell from 21,964 (2013) to 14,055 (2021) (with a brief rise to 19,296 in 2018)  
+- **2022‑2025:** Chicago Lawn – 14,874 (2022), 17,037 (2023), 17,277 (2024), 15,236 (2025)  
+- **2026:** Near West – 11,017 crimes  
+
+**Key observations**
+
+- Chicago Lawn was the leading district for the longest stretch (2002‑2012 and again 2022‑2025).  
+- Harrison took over as the top district for a nine‑year period (2013‑2021).  
+- The highest single‑year total in the dataset is 35,413 crimes in 2001 (Wentworth).  
+- Crime totals for the leading district generally declined over time, with a modest rebound for Chicago Lawn in the early 2020s before dropping again in 2026.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"73","Hard","What is the arrest percentage for each district (by name) with more than 1000 crimes, ranked highest first?","SELECT dn.district_name,
+       COUNT(*) AS total_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+GROUP BY dn.district_name
+HAVING COUNT(*) > 1000
+ORDER BY arrest_rate_pct DESC;","WITH district_stats AS (
+    SELECT dn.district_name,
+           COUNT(*) AS total_crimes,
+           COUNT(*) FILTER (WHERE ci.""ARREST"" = TRUE) AS arrests
+    FROM crime_incidents ci
+    JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+    GROUP BY dn.district_name
+    HAVING COUNT(*) > 1000
+)
+SELECT district_name,
+       ROUND(100.0 * arrests / NULLIF(total_crimes, 0), 2) AS arrest_percentage
+FROM district_stats
+ORDER BY arrest_percentage DESC;","**Arrest rates for districts with > 1,000 crimes (highest to lowest)**  
+
+| Rank | District | Arrest % |
+|------|----------|----------|
+| 1 | Harrison | **40.71 %** |
+| 2 | Austin | **37.45 %** |
+| 3 | Ogden | **30.53 %** |
+| 4 | Englewood | **27.19 %** |
+| 5 | Deering | **26.50 %** |
+| 6 | Grand Central | **25.98 %** |
+| 7 | Central | **25.84 %** |
+| 8 | Gresham | **24.54 %** |
+| 9 | Calumet | **24.41 %** |
+| 10 | Wentworth | **24.32 %** |
+| 11 | Grand Crossing | **24.19 %** |
+| 12 | Near North | **22.24 %** |
+| 13 | Chicago Lawn | **21.66 %** |
+| 14 | Lincoln | **21.50 %** |
+| 15 | South Chicago | **21.28 %** |
+| 16 | Near West | **21.12 %** |
+| 17 | Rogers Park | **21.06 %** |
+| 18 | Morgan Park | **20.10 %** |
+| 19 | Albany Park | **19.82 %** |
+| 20 | Town Hall | **19.63 %** |
+| 21 | Shakespeare | **19.61 %** |
+| 22 | Jefferson Park | **18.15 %** |
+
+**Key take‑aways**
+
+- **Harrison** has the highest arrest proportion at **40.71 %**, more than double the lowest‑ranking district.  
+- The arrest percentages decline steadily, with the bottom‑ranked district (**Jefferson Park**) at **18.15 %**.  
+- All listed districts exceed the 1,000‑crime threshold, indicating that these arrest rates are based on sizable crime volumes.  
+
+Overall, arrest rates across the qualifying districts range from roughly **18 % to 41 %**, with a clear gradient from the highest‑rate districts in the north‑west (Harrison, Austin) to lower‑rate districts in the north‑west and south‑west (Jefferson Park, Shakespeare, Town Hall).","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"74","Hard","What was the month-over-month change in total crime counts during 2023?","WITH monthly AS (
+  SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS crime_count
+  FROM crime_incidents WHERE ""YEAR"" = 2023 GROUP BY month
+)
+SELECT month, crime_count, crime_count - LAG(crime_count) OVER (ORDER BY month) AS change_from_prev_month
+FROM monthly ORDER BY month;","WITH monthly_counts AS (
+    SELECT
+        EXTRACT(MONTH FROM ""INCIDENT_DATE"")::int AS month,
+        COUNT(*) AS total_crimes
+    FROM crime_incidents
+    WHERE ""YEAR"" = 2023
+    GROUP BY month
+    ORDER BY month
+)
+SELECT
+    month,
+    total_crimes,
+    total_crimes - LAG(total_crimes) OVER (ORDER BY month) AS month_over_month_change
+FROM monthly_counts;","**Month‑over‑month change in total crime counts for 2023**
+
+- **January** started the year with **21,341** reported crimes (no prior month for comparison).  
+- **February** saw a sharp drop of **2,852 crimes**, falling to **18,489**.  
+- **March** rebounded with the **largest monthly increase** of **+2,323**, bringing the total up to **20,812**.  
+- **April** held steady (no change), staying at **20,812**.  
+- **May** rose again by **+1,478** to **22,290**.  
+- **June** added **+480** crimes, reaching **22,770**.  
+- **July** continued the upward trend with a **+1,294** increase, the second‑largest gain, for a total of **24,064**.  
+- **August** grew modestly by **+174**, ending the month at **24,238**.  
+- **September** reversed the trend, dropping **-1,581** to **22,657**.  
+- **October** recovered slightly with **+447**, moving the count to **23,104**.  
+- **November** experienced the second‑largest decline of **-1,670**, lowering the total to **21,434**.  
+- **December** finished the year with a small dip of **-102**, ending at **21,332**.
+
+**Overall picture**
+
+- The year began and ended with almost the same crime volume (21,341 in January vs. 21,332 in December – a net change of **‑9**).  
+- The **biggest month‑to‑month increase** was **March (+2,323)**, and the **biggest decrease** was **February (‑2,852)**.  
+- After a volatile spring and summer, the latter half of the year saw a dip in September, a modest recovery in October, a notable fall in November, and a slight decline in December.  
+
+In short, 2023’s crime counts fluctuated month‑to‑month, with a sharp early‑year dip, a mid‑year rise, and a modest overall decline of just nine incidents from the start to the end of the year.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"75","Hard","For wards (by name) with at least 500 crimes, what is the arrest rate, ranked highest to lowest?","SELECT wn.ward_name,
+       COUNT(*) AS total_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct
+FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+GROUP BY wn.ward_name
+HAVING COUNT(*) >= 500
+ORDER BY arrest_rate_pct DESC;","WITH ward_stats AS (
+    SELECT ""WARD"" AS ward_id,
+           COUNT(*) AS total_crimes,
+           SUM(CASE WHEN ""ARREST"" THEN 1 ELSE 0 END) AS arrests
+    FROM crime_incidents
+    GROUP BY ""WARD""
+    HAVING COUNT(*) >= 500
+)
+SELECT wn.ward_name,
+       ROUND(100.0 * ws.arrests / NULLIF(ws.total_crimes, 0), 2) AS arrest_rate
+FROM ward_stats ws
+JOIN ward_names wn ON wn.ward_id = ws.ward_id
+ORDER BY arrest_rate DESC;","**Summary of Arrest Rates for High‑Crime Wards (≥ 500 crimes)**  
+
+- The arrest rate varies widely across the 55 wards that meet the 500‑crime threshold, ranging from **just under 12 %** up to **nearly 40 %**.  
+- **Highest arrest rates** are concentrated in the western and south‑west side neighborhoods:  
+  1. **Austin / East Garfield Park / Humboldt Park** – **39.7 %**  
+  2. **North Lawndale / East Garfield Park** – **37.3 %**  
+  3. **Austin / Humboldt Park / Belmont Cragin** – **33.0 %**  
+  4. **Bronzeville / Douglas / Grand Boulevard** – **30.9 %**  
+  5. **East Garfield Park / Near West Side / West Town** – **30.8 %**  
+
+- **Mid‑range arrest rates** (≈ 20‑30 %) are seen in many central and north‑side wards, such as:  
+  - **River North / Gold Coast / Near North** – 28.8 %  
+  - **Uptown / Edgewater / Lake View** – 27.2 %  
+  - **Little Village / South Lawndale** – 26.2 %  
+  - **Portage Park / Dunning / Belmont Cragin** – 24.0 %  
+  - **Rogers Park / West Ridge** – 24.7 %  
+
+- **Lowest arrest rates** among the qualifying wards are found on the north side and near the lake:  
+  - **Lincoln Park / Lake View / Near North** – **11.5 %** (the lowest in the list)  
+  - **Logan Square / Bucktown / Wicker Park** – 14.2 %  
+  - **Beverly / Morgan Park / Mount Greenwood** – 14.4 %  
+
+**Key take‑aways**
+
+- The overall picture shows that **nearly one‑third of crimes in the highest‑crime wards result in arrests**, but there is a **more than three‑fold difference** between the ward with the highest arrest rate (≈ 40 %) and the ward with the lowest (≈ 12 %).  
+- Wards on the **west side and south‑west side** tend to have the **highest arrest percentages**, while **north‑side lakefront neighborhoods** have the **lowest**.  
+
+This ranking provides a quick reference for where law‑enforcement actions (as measured by arrests) are most and least frequent relative to crime volume.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"76","Hard","Within each crime category, what are the top 3 crime offense subtypes by count?","WITH ranked AS (
+  SELECT ""CRIME_CATEGORY"", ""CRIME_OFFENSE_SUBTYPE"", COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY ""CRIME_CATEGORY"" ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents
+  GROUP BY ""CRIME_CATEGORY"", ""CRIME_OFFENSE_SUBTYPE""
+)
+SELECT ""CRIME_CATEGORY"", ""CRIME_OFFENSE_SUBTYPE"", crime_count FROM ranked WHERE rn <= 3 ORDER BY ""CRIME_CATEGORY"", rn;","WITH subtype_counts AS (
+    SELECT
+        ""CRIME_CATEGORY"",
+        ""CRIME_OFFENSE_SUBTYPE"",
+        COUNT(*) AS subtype_count
+    FROM crime_incidents
+    GROUP BY ""CRIME_CATEGORY"", ""CRIME_OFFENSE_SUBTYPE""
+),
+ranked AS (
+    SELECT
+        ""CRIME_CATEGORY"",
+        ""CRIME_OFFENSE_SUBTYPE"",
+        subtype_count,
+        ROW_NUMBER() OVER (PARTITION BY ""CRIME_CATEGORY"" ORDER BY subtype_count DESC) AS rn
+    FROM subtype_counts
+)
+SELECT
+    ""CRIME_CATEGORY"",
+    ""CRIME_OFFENSE_SUBTYPE"",
+    subtype_count
+FROM ranked
+WHERE rn <= 3
+ORDER BY ""CRIME_CATEGORY"", subtype_count DESC;","**Top three offense sub‑types within each crime category**
+
+| Crime Category | #1 (offense – count) | #2 (offense – count) | #3 (offense – count) |
+|----------------|----------------------|----------------------|----------------------|
+| **Drug** | Possession: Cannabis 30 g or less – **278,136** | Possession: Crack – **121,109** | Possession: Heroin (White) – **95,786** |
+| **Other** | Non‑Aggravated – **15,313** | Aggravated: Other – **4,380** | Predatory – **2,676** |
+| **Property** | $500 and under – **689,726** | To Vehicle – **487,089** | Over $500 – **470,569** |
+| **Public order** | Reckless Conduct – **33,135** | Game/Dice – **12,346** | Obstructing Identification – **8,292** |
+| **Sex offense** | Solicit on Public Way – **49,200** | Child Abuse – **17,550** | Solicit for Business – **14,753** |
+| **Violent** | Simple – **1,018,694** | Domestic Battery Simple – **675,987** | Aggravated: Other Dang Weapon – **96,424** |
+| **Weapons** | Unlawful Possession of Handgun – **52,215** | Unlawful Possession – Handgun (duplicate label) – **32,708** | Reckless Firearm Discharge – **16,120** |
+
+**Key take‑aways**
+
+- The **Violent** category dominates overall volume, with over a million “Simple” offenses and more than 600 k domestic‑battery incidents.
+- In **Property** crimes, low‑value thefts ($500 and under) are the most frequent, followed closely by vehicle‑related thefts.
+- **Drug** offenses are led by cannabis possession, with crack and heroin possession trailing.
+- **Weapons** offenses are primarily illegal handgun possession, with reckless discharge far less common.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"77","Hard","What was the year-over-year percentage growth in total crimes?","WITH yearly AS (
+  SELECT ""YEAR"", COUNT(*) AS crime_count FROM crime_incidents GROUP BY ""YEAR""
+)
+SELECT ""YEAR"", crime_count,
+       ROUND(100.0 * (crime_count - LAG(crime_count) OVER (ORDER BY ""YEAR"")) / LAG(crime_count) OVER (ORDER BY ""YEAR""), 2) AS pct_growth
+FROM yearly ORDER BY ""YEAR"";","WITH yearly_counts AS (
+    SELECT
+        ""YEAR"" AS year,
+        COUNT(*) AS total_crimes
+    FROM crime_incidents
+    GROUP BY ""YEAR""
+)
+SELECT
+    year,
+    ROUND(100.0 * (total_crimes - LAG(total_crimes) OVER (ORDER BY year)) / NULLIF(LAG(total_crimes) OVER (ORDER BY year), 0), 2) AS yoy_percentage_growth
+FROM yearly_counts
+ORDER BY year;","The year‑over‑year change in total crimes shows a long period of decline punctuated by a few brief rebounds:
+
+- **2001** has no prior year for comparison, so its growth is unavailable.  
+- **2002** recorded a modest rise of **+0.18 %**, the only positive change in the early 2000s.  
+- From **2003 through 2015** the figures were consistently negative, ranging from a mild dip of **‑1.23 %** (2006) to a steep fall of **‑10.31 %** (2014).  
+- **2016** broke the downtrend with a small increase of **+1.92 %**, but the next two years slipped back to near‑zero change (**‑0.25 %** in 2017 and **‑0.04 %** in 2018).  
+- **2019** saw another decline (**‑2.71 %**), followed by the sharpest drop in the series to date in **2020** (**‑18.79 %**), likely reflecting the impact of the COVID‑19 pandemic.  
+- **2021** remained negative (**‑1.43 %**), but **2022** marked a strong rebound with **+14.49 %**, the largest positive swing in the dataset.  
+- **2023** continued the upward momentum (**+9.69 %**), but the recovery was short‑lived; **2024** fell back to **‑1.60 %**, **2025** dropped further to **‑8.46 %**, and **2026** experienced the steepest decline of the entire period at **‑30.15 %**.
+
+**Overall pattern:** After a decade‑long downward trend (2003‑2015), crime rates briefly rose in 2016, plummeted in 2020, rebounded sharply in 2022‑2023, and then entered another period of rapid decline through 2026. The most notable swings are the **‑18.79 %** drop in 2020, the **+14.49 %** surge in 2022, and the **‑30.15 %** plunge in 2026.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"78","Hard","Which community areas (by name) have a violent crime rate above 20% of their total crimes?","SELECT can.community_area_name,
+       COUNT(*) AS total_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""VIOLENT_CRIME_FLAG"" = 1 THEN 1 ELSE 0 END) / COUNT(*), 2) AS violent_rate_pct
+FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id
+GROUP BY can.community_area_name
+HAVING ROUND(100.0 * SUM(CASE WHEN ci.""VIOLENT_CRIME_FLAG"" = 1 THEN 1 ELSE 0 END) / COUNT(*), 2) > 20
+ORDER BY violent_rate_pct DESC;","WITH area_stats AS (
+    SELECT
+        ci.""COMMUNITY_AREA"" AS community_area_id,
+        COUNT(*) AS total_crimes,
+        SUM(ci.""VIOLENT_CRIME_FLAG"") AS violent_crimes
+    FROM crime_incidents ci
+    GROUP BY ci.""COMMUNITY_AREA""
+)
+SELECT
+    cn.community_area_name
+FROM area_stats a
+JOIN community_area_names cn
+    ON cn.community_area_id = a.community_area_id
+WHERE violent_crimes::float / NULLIF(total_crimes, 0) > 0.20;","The query returns **all of the community areas whose violent‑crime share exceeds 20 % of their total reported crimes**. In total, **78 neighborhoods** meet this threshold, including:
+
+- **North‑Side neighborhoods** such as Rogers Park, West Ridge, Uptown, Lincoln Square, Lake View, Near North Side, Edison Park, Norwood Park, Jefferson Park, North Park, Albany Park, Portage Park, Irving Park, Dunning, Montclare, Belmont Cragin, Hermosa, Avondale, Logan Square, Humboldt Park, West Town, and Edgewater.  
+
+- **West‑Side neighborhoods** such as Austin, West Garfield Park, East Garfield Park, Near West Side, North Lawndale, South Lawndale, Lower West Side, Near South Side, Armour Square, Douglas, Oakland, Fuller Park, Grand Boulevard, Kenwood, Washington Park, Hyde Park, Woodlawn, South Shore, Chatham, Avalon Park, South Chicago, Burnside, Calumet Heights, Roseland, Pullman, South Deering, East Side, West Pullman, Riverdale, Hegewisch, Garfield Ridge, Archer Heights, Brighton Park, McKinley Park, Bridgeport, New City, West Elsdon, Gage Park, Clearing, West Lawn, Chicago Lawn, West Englewood, Englewood, Greater Grand Crossing, Ashburn, Auburn Gresham, Beverly, Washington Heights, Mount Greenwood, Morgan Park.
+
+These 78 community areas—spanning the North, West, and South sides of Chicago—are the ones where violent offenses constitute more than one‑fifth of all crimes recorded in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"79","Hard","Which districts (by name) have a crime count above the citywide average per district?","SELECT dn.district_name, COUNT(*) AS crime_count
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+GROUP BY dn.district_name
+HAVING COUNT(*) > (
+  SELECT AVG(district_total) FROM (
+    SELECT COUNT(*) AS district_total FROM crime_incidents GROUP BY ""DISTRICT""
+  ) t
+)
+ORDER BY crime_count DESC;","WITH district_counts AS (
+    SELECT ""DISTRICT"" AS district_id, COUNT(*) AS crime_count
+    FROM crime_incidents
+    GROUP BY ""DISTRICT""
+),
+avg_count AS (
+    SELECT AVG(crime_count) AS avg_crime
+    FROM district_counts
+)
+SELECT dn.district_name
+FROM district_counts dc
+JOIN avg_count a ON TRUE
+JOIN district_names dn ON dn.district_id = dc.district_id
+WHERE dc.crime_count > a.avg_crime;","The query identified **17 districts** whose individual crime totals exceed the citywide average per district. These districts are:
+
+- Central  
+- Wentworth  
+- Grand Crossing  
+- South Chicago  
+- Calumet  
+- Gresham  
+- Englewood  
+- Chicago Lawn  
+- Deering  
+- Ogden  
+- Harrison  
+- Near West  
+- Shakespeare  
+- Austin  
+- Near North  
+- Town Hall  
+- Grand Central  
+
+In other words, each of these neighborhoods experiences a higher-than‑average number of crimes compared with the overall city average.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"80","Hard","What are the top 5 blocks with the most distinct crime types?","SELECT ""BLOCK"", COUNT(DISTINCT ""CRIME_TYPE"") AS distinct_crime_types FROM crime_incidents GROUP BY ""BLOCK"" ORDER BY distinct_crime_types DESC LIMIT 5;","SELECT ""BLOCK"", COUNT(DISTINCT ""CRIME_TYPE"") AS distinct_crime_type_count
+FROM crime_incidents
+GROUP BY ""BLOCK""
+ORDER BY distinct_crime_type_count DESC
+LIMIT 5;","The query identified the five street blocks that have the greatest variety of crime types.  
+
+- **041XX W North Ave** – 28 distinct crime types  
+- **009XX W Belmont Ave** – 28 distinct crime types  
+- **030XX N Cicero Ave** – 28 distinct crime types  
+- **001XX N State St** – 27 distinct crime types  
+- **007XX E 79th St** – 27 distinct crime types  
+
+These blocks top the list, each featuring 27–28 different categories of crime.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"81","Hard","For each year, which crime offense group had the highest count?","WITH ranked AS (
+  SELECT ""YEAR"", ""CRIME_OFFENSE_GROUP"", COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY ""YEAR"" ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents GROUP BY ""YEAR"", ""CRIME_OFFENSE_GROUP""
+)
+SELECT ""YEAR"", ""CRIME_OFFENSE_GROUP"", crime_count FROM ranked WHERE rn = 1 ORDER BY ""YEAR"";","WITH yearly_counts AS (
+    SELECT ""YEAR"" AS yr,
+           ""CRIME_OFFENSE_GROUP"" AS offense_group,
+           COUNT(*) AS incident_count
+    FROM crime_incidents
+    GROUP BY ""YEAR"", ""CRIME_OFFENSE_GROUP""
+),
+ranked AS (
+    SELECT yr,
+           offense_group,
+           incident_count,
+           ROW_NUMBER() OVER (PARTITION BY yr ORDER BY incident_count DESC) AS rn
+    FROM yearly_counts
+)
+SELECT yr AS ""YEAR"",
+       offense_group AS ""CRIME_OFFENSE_GROUP"",
+       incident_count AS ""INCIDENT_COUNT""
+FROM ranked
+WHERE rn = 1
+ORDER BY yr;","**Summary**
+
+The query shows that **the “Theft” offense group consistently had the highest count of reported crimes for every year from 2001 through 2026**.  
+
+- The peak year was **2001**, with **99,292** theft incidents.  
+- After 2001, the yearly theft counts gradually declined, reaching a low of **34,751** in **2026**.  
+- Even in years where overall crime numbers fell sharply (e.g., 2020‑2021), theft remained the top offense group, with 41,356 incidents in 2020 and 40,824 in 2021.  
+
+In short, across the entire 26‑year span, theft was the dominant crime category each year, with counts ranging from roughly **99 k** at the high end to **35 k** at the low end.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"82","Hard","Among wards (by name) with at least 200 domestic crimes, which have the highest domestic crime rate (domestic crimes as a percentage of total crimes)?","SELECT wn.ward_name,
+       SUM(CASE WHEN ci.""DOMESTIC"" = TRUE THEN 1 ELSE 0 END) AS domestic_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""DOMESTIC"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS domestic_rate_pct
+FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+GROUP BY wn.ward_name
+HAVING SUM(CASE WHEN ci.""DOMESTIC"" = TRUE THEN 1 ELSE 0 END) >= 200
+ORDER BY domestic_rate_pct DESC LIMIT 5;","WITH crime_counts AS (
+    SELECT wn.ward_name,
+           COUNT(*) AS total_crimes,
+           SUM(CASE WHEN ""DOMESTIC"" THEN 1 ELSE 0 END) AS domestic_crimes
+    FROM crime_incidents ci
+    JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+    GROUP BY wn.ward_name
+    HAVING SUM(CASE WHEN ""DOMESTIC"" THEN 1 ELSE 0 END) >= 200
+)
+SELECT ward_name,
+       ROUND(100.0 * domestic_crimes / NULLIF(total_crimes, 0), 2) AS domestic_crime_rate
+FROM crime_counts
+ORDER BY domestic_crime_rate DESC;","**Summary of the highest domestic‑crime‑rate wards (among those with ≥ 200 domestic crimes)**  
+
+The query ranks community‑area groups (wards) by the share of domestic incidents out of all crimes recorded. The list is ordered from the highest percentage to the lowest.  
+
+| Rank | Ward (by name) | Domestic‑crime rate |
+|------|----------------|---------------------|
+| 1 | **South Shore / South Chicago / Calumet Heights** | **25.46 %** |
+| 2 | **Ashburn / Auburn Gresham / West Englewood** | **25.32 %** |
+| 3 | **Roseland / Pullman / Riverdale** | **24.31 %** |
+| 4 | Avalon Park / Chatham / Burnside | 23.67 % |
+| 5 | Washington Park / Woodlawn / Grand Boulevard | 23.50 % |
+| … | … | … |
+| 48 | River North / Gold Coast / Near North | 10.31 % |
+| 49 | Edison Park / Norwood Park / Jefferson Park | 10.29 % |
+| 50 | West Town / Wicker Park / Bucktown | 8.66 % |
+| … | … | … |
+| 66 | River North / Streeterville / Near North | **4.13 %** |
+
+**Key take‑aways**
+
+* The three wards with the **highest domestic‑crime proportion** are **South Shore / South Chicago / Calumet Heights (25.46 %)**, **Ashburn / Auburn Gresham / West Englewood (25.32 %)**, and **Roseland / Pullman / Riverdale (24.31 %)**. In each of these areas, roughly one‑quarter of all reported crimes are domestic incidents.  
+
+* All wards in the top‑10 exceed a 20 % domestic‑crime share, indicating a relatively strong concentration of domestic offenses in those neighborhoods.  
+
+* The rates drop sharply after the top‑20, falling below 15 % for most of the remaining wards, and the lowest listed rate is **4.13 %** (River North / Streeterville / Near North).  
+
+* Because the list includes only wards with at least 200 domestic crimes, these percentages reflect areas where domestic offenses are both frequent and a sizable share of overall crime.  
+
+In short, **South Shore / South Chicago / Calumet Heights**, **Ashburn / Auburn Gresham / West Englewood**, and **Roseland / Pullman / Riverdale** stand out as the neighborhoods with the greatest domestic‑crime burden relative to total crime.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"83","Hard","Which districts (by name) had a higher crime count in 2024 than in 2020?","SELECT dn.district_name,
+       SUM(CASE WHEN ci.""YEAR"" = 2020 THEN 1 ELSE 0 END) AS crimes_2020,
+       SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) AS crimes_2024
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" IN (2020, 2024)
+GROUP BY dn.district_name
+HAVING SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) > SUM(CASE WHEN ci.""YEAR"" = 2020 THEN 1 ELSE 0 END)
+ORDER BY dn.district_name;","SELECT dn.district_name
+FROM crime_incidents ci
+JOIN district_names dn ON dn.district_id = ci.""DISTRICT""
+WHERE ci.""YEAR"" IN (2020, 2024)
+GROUP BY dn.district_name
+HAVING SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) > SUM(CASE WHEN ci.""YEAR"" = 2020 THEN 1 ELSE 0 END);","The query identified **19 police districts** whose crime totals rose in 2024 compared with 2020. The districts are:
+
+- Albany Park  
+- Central  
+- Chicago Lawn  
+- Deering  
+- Grand Central  
+- Grand Crossing  
+- Gresham  
+- Homan Square  
+- Jefferson Park  
+- Lincoln  
+- Morgan Park  
+- Near North  
+- Near West  
+- Ogden  
+- Rogers Park  
+- Shakespeare  
+- South Chicago  
+- Town Hall  
+- Wentworth  
+
+These districts all experienced higher crime counts in 2024 than they did in 2020.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"84","Hard","What are the top 5 community areas (by name) with the most high-risk-location crimes that did not result in an arrest?","SELECT can.community_area_name, COUNT(*) AS crime_count
+FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id
+WHERE ci.""LOCATION_RISK_CATEGORY"" = 'High Risk' AND ci.""ARREST"" = FALSE
+GROUP BY can.community_area_name
+ORDER BY crime_count DESC LIMIT 5;","SELECT ca.community_area_name AS community_area,
+       COUNT(*) AS high_risk_no_arrest_count
+FROM crime_incidents ci
+JOIN community_area_names ca
+  ON ci.""COMMUNITY_AREA"" = ca.community_area_id
+WHERE ci.""LOCATION_RISK_CATEGORY"" = 'High Risk'
+  AND ci.""ARREST"" = FALSE
+GROUP BY ca.community_area_name
+ORDER BY high_risk_no_arrest_count DESC
+LIMIT 5;","The query identified the five Chicago community areas with the highest number of high‑risk‑location crimes that did **not** lead to an arrest. In descending order, they are:
+
+1. **Austin** – 114,675 incidents  
+2. **West Town** – 84,862 incidents  
+3. **Near West Side** – 71,446 incidents  
+4. **South Shore** – 65,134 incidents  
+5. **Humboldt Park** – 61,364 incidents  
+
+These areas account for the largest share of such crimes in the dataset.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"85","Hard","What is the 3-month moving average of monthly crime counts for 2023?","WITH monthly AS (
+  SELECT EXTRACT(MONTH FROM ""INCIDENT_DATE"") AS month, COUNT(*) AS crime_count
+  FROM crime_incidents WHERE ""YEAR"" = 2023 GROUP BY month
+)
+SELECT month, crime_count,
+       ROUND(AVG(crime_count) OVER (ORDER BY month ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) AS moving_avg_3mo
+FROM monthly ORDER BY month;","WITH monthly_counts AS (
+    SELECT
+        EXTRACT(MONTH FROM ""INCIDENT_DATE"")::int AS month,
+        COUNT(*) AS crime_count
+    FROM crime_incidents
+    WHERE ""YEAR"" = 2023
+    GROUP BY EXTRACT(MONTH FROM ""INCIDENT_DATE"")
+)
+SELECT
+    make_date(2023, month, 1) AS month_start,
+    ROUND(AVG(crime_count) OVER (ORDER BY month ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) AS three_month_moving_avg
+FROM monthly_counts
+ORDER BY month;","**3‑Month Moving Average of Monthly Crime Counts in 2023**
+
+| Month (2023) | 3‑month moving average |
+|--------------|------------------------|
+| Jan – Mar   | 20,214 crimes |
+| Feb – Apr   | 20,037 crimes |
+| Mar – May   | 21,305 crimes |
+| Apr – Jun   | 21,958 crimes |
+| May – Jul   | 23,041 crimes |
+| Jun – Aug   | 23,691 crimes |
+| Jul – Sep   | 23,653 crimes |
+| Aug – Oct   | 23,333 crimes |
+| Sep – Nov   | 22,398 crimes |
+| Oct – Dec   | 21,957 crimes |
+
+**Key take‑aways**
+
+* The 3‑month moving average started the year just above 20 k crimes per month.  
+* It rose steadily through the spring, reaching a peak of about **23.7 k** in the July‑September window.  
+* After August, the average began a modest decline, falling back to roughly **22 k** by the October‑December window.  
+
+Overall, crime counts showed a gradual increase in the first half of 2023, peaked in late summer, and then tapered off slightly toward the end of the year.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"86","Hard","For each district (by name), what percentage of its crimes are drug or weapon crimes combined?","SELECT dn.district_name,
+       COUNT(*) AS total_crimes,
+       ROUND(100.0 * SUM(CASE WHEN ci.""DRUG_CRIME_FLAG"" = 1 OR ci.""WEAPON_CRIME_FLAG"" = 1 THEN 1 ELSE 0 END) / COUNT(*), 2) AS drug_or_weapon_pct
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+GROUP BY dn.district_name
+ORDER BY drug_or_weapon_pct DESC;","WITH agg AS (
+    SELECT
+        ci.""DISTRICT"" AS district_id,
+        COUNT(*) AS total_crimes,
+        SUM(CASE WHEN ci.""DRUG_CRIME_FLAG"" = 1 OR ci.""WEAPON_CRIME_FLAG"" = 1 THEN 1 ELSE 0 END) AS combined_crimes
+    FROM crime_incidents ci
+    GROUP BY ci.""DISTRICT""
+)
+SELECT
+    dn.district_name,
+    ROUND(100.0 * agg.combined_crimes / NULLIF(agg.total_crimes, 0), 2) AS drug_weapon_percentage
+FROM agg
+JOIN district_names dn ON agg.district_id = dn.district_id
+ORDER BY dn.district_name;","**Summary of drug‑or‑weapon crime share by police district**
+
+- Across the 23 districts, drug‑or‑weapon offenses make up **about 10 % of all crimes on average** (10.3 %).
+- The share varies widely, ranging from **just under 5 %** in the lowest‑impact districts to **nearly 28 %** in the highest‑impact district.
+
+| Rank | District (by name) | % of total crimes that are drug or weapon |
+|------|--------------------|-------------------------------------------|
+| 1    | **Harrison**       | **27.71 %** |
+| 2    | **Austin**         | 24.59 % |
+| 3    | **Homan Square**   | 16.13 % |
+| 4    | **Ogden**          | 15.90 % |
+| 5    | **Englewood**      | 13.59 % |
+| 6    | **Deering**        | 10.66 % |
+| 7    | **Grand Crossing** | 10.02 % |
+| 8    | **Gresham**        | 10.20 % |
+| 9    | **Grand Central**  | 9.99 % |
+| 10   | **Wentworth**      | 9.99 % |
+| 11   | **South Chicago**  | 9.36 % |
+| 12   | **Calumet**        | 11.22 % |
+| 13   | **Morgan Park**    | 8.71 % |
+| 14   | **Chicago Lawn**   | 7.94 % |
+| 15   | **Near West**      | 7.16 % |
+| 16   | **Rogers Park**    | 7.16 % |
+| 17   | **Lincoln**        | 6.21 % |
+| 18   | **Shakespeare**    | 5.91 % |
+| 19   | **Albany Park**    | 5.48 % |
+| 20   | **Jefferson Park** | 5.28 % |
+| 21   | **Town Hall**      | 4.77 % |
+| 22   | **Central**        | 4.79 % |
+| 23   | **Near North**     | **4.53 %** |
+
+**Key take‑aways**
+
+- **Harrison** stands out with the highest concentration of drug or weapon crimes, accounting for more than a quarter of its total offenses.
+- **Austin** also shows a markedly high share (≈ 25 %).
+- The **four districts with the lowest shares**—Near North, Town Hall, Central, and Albany Park—each have drug/weapon crimes comprising **under 5 %** of their overall crime totals.
+- Most districts fall near the city‑wide average of **10 %**, indicating that while drug and weapon offenses are a notable component of crime in many areas, they are not dominant in the majority of districts.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"87","Hard","Which wards (by name) have an arrest rate higher than the citywide average arrest rate?","SELECT wn.ward_name,
+       ROUND(100.0 * SUM(CASE WHEN ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct
+FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+GROUP BY wn.ward_name
+HAVING ROUND(100.0 * SUM(CASE WHEN ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) > (
+  SELECT ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) FROM crime_incidents
+)
+ORDER BY arrest_rate_pct DESC;","WITH city AS (
+    SELECT
+        SUM(CASE WHEN ""ARREST"" THEN 1 ELSE 0 END)::numeric AS arrests,
+        COUNT(*)::numeric AS total,
+        ROUND(100.0 * SUM(CASE WHEN ""ARREST"" THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS city_rate
+    FROM crime_incidents
+),
+ward_stats AS (
+    SELECT
+        ci.""WARD"" AS ward_id,
+        SUM(CASE WHEN ""ARREST"" THEN 1 ELSE 0 END) AS arrests,
+        COUNT(*) AS total,
+        ROUND(100.0 * SUM(CASE WHEN ""ARREST"" THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS arrest_rate
+    FROM crime_incidents ci
+    GROUP BY ci.""WARD""
+)
+SELECT wn.""ward_name""
+FROM ward_stats ws
+JOIN ward_names wn ON wn.ward_id = ws.ward_id
+CROSS JOIN city c
+WHERE ws.arrest_rate > c.city_rate;","The query identified **13 wards** whose arrest rates exceed the citywide average. These wards are:
+
+- River North / Gold Coast / Near North  
+- Bronzeville / Douglas / Grand Boulevard  
+- Englewood / West Englewood / Auburn Gresham  
+- Auburn Gresham / Chatham / Englewood  
+- Ashburn / Auburn Gresham / West Englewood  
+- Washington Park / Woodlawn / Grand Boulevard  
+- Little Village / South Lawndale  
+- North Lawndale / East Garfield Park  
+- East Garfield Park / Near West Side / West Town  
+- Austin / East Garfield Park / Humboldt Park  
+- Austin / Galewood  
+- Austin / Humboldt Park / Belmont Cragin  
+- Uptown / Edgewater / Lake View  
+
+These are the only wards in the dataset where the arrest rate is higher than the overall city average.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"88","Hard","What are the top 5 crime types by number of distinct blocks they occurred on?","SELECT ""CRIME_TYPE"", COUNT(DISTINCT ""BLOCK"") AS distinct_blocks FROM crime_incidents GROUP BY ""CRIME_TYPE"" ORDER BY distinct_blocks DESC LIMIT 5;","SELECT ""CRIME_TYPE"", COUNT(DISTINCT ""BLOCK"") AS distinct_blocks
+FROM crime_incidents
+GROUP BY ""CRIME_TYPE""
+ORDER BY distinct_blocks DESC
+LIMIT 5;","The query shows the five crime categories that appear on the greatest number of unique city blocks.   
+
+- **Theft** occurs on the most blocks, with **54,631** distinct locations.  
+- **Criminal damage** follows, appearing on **48,834** blocks.  
+- **Battery** is reported on **47,145** blocks.  
+- **Motor vehicle theft** shows up on **41,906** blocks.  
+- **Other offense** is present on **41,450** blocks.  
+
+Thus, theft is the most spatially widespread crime, and the other four types round out the top five in terms of distinct block coverage.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"89","Hard","For each year, how many districts had zero homicide offenses?","SELECT y.""YEAR"", COUNT(*) AS districts_with_zero_homicides
+FROM (SELECT DISTINCT ""YEAR"" FROM crime_incidents) y
+CROSS JOIN (SELECT DISTINCT ""DISTRICT"" FROM crime_incidents WHERE ""DISTRICT"" IS NOT NULL) d
+WHERE NOT EXISTS (
+  SELECT 1 FROM crime_incidents ci
+  WHERE ci.""YEAR"" = y.""YEAR"" AND ci.""DISTRICT"" = d.""DISTRICT"" AND ci.""CRIME_OFFENSE_GROUP"" = 'Homicide'
+)
+GROUP BY y.""YEAR"" ORDER BY y.""YEAR"";","WITH years AS (
+    SELECT DISTINCT ""YEAR""
+    FROM crime_incidents
+),
+year_district AS (
+    SELECT y.""YEAR"", d.district_id
+    FROM years y
+    CROSS JOIN district_names d
+),
+homicide_counts AS (
+    SELECT ""YEAR"", ""DISTRICT"", COUNT(*) AS homicide_cnt
+    FROM crime_incidents
+    WHERE ""CRIME_CATEGORY"" = 'Homicide'
+    GROUP BY ""YEAR"", ""DISTRICT""
+)
+SELECT yd.""YEAR"",
+       COUNT(*) FILTER (WHERE hc.homicide_cnt IS NULL) AS districts_with_zero_homicide
+FROM year_district yd
+LEFT JOIN homicide_counts hc
+    ON yd.""YEAR"" = hc.""YEAR""
+   AND yd.district_id = hc.""DISTRICT""
+GROUP BY yd.""YEAR""
+ORDER BY yd.""YEAR"";","Across every year in the dataset—from 2001 through 2026—**exactly 23 districts recorded zero homicide offenses**. In other words, the count of districts with no homicides remained constant at 23 for each year.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"90","Hard","What are the overall top 5 (district, most common crime offense group) pairs by that group's crime count?","WITH ranked AS (
+  SELECT dn.district_name, ci.""CRIME_OFFENSE_GROUP"", COUNT(*) AS crime_count,
+         ROW_NUMBER() OVER (PARTITION BY dn.district_name ORDER BY COUNT(*) DESC) AS rn
+  FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+  GROUP BY dn.district_name, ci.""CRIME_OFFENSE_GROUP""
+)
+SELECT district_name, ""CRIME_OFFENSE_GROUP"", crime_count FROM ranked WHERE rn = 1 ORDER BY crime_count DESC LIMIT 5;","WITH group_counts AS (
+  SELECT d.district_name,
+         ci.""CRIME_OFFENSE_GROUP"",
+         COUNT(*) AS crime_count
+  FROM crime_incidents ci
+  JOIN district_names d ON ci.""DISTRICT"" = d.district_id
+  GROUP BY d.district_name, ci.""CRIME_OFFENSE_GROUP""
+),
+ranked AS (
+  SELECT *,
+         ROW_NUMBER() OVER (PARTITION BY district_name ORDER BY crime_count DESC) AS rn
+  FROM group_counts
+)
+SELECT district_name AS district,
+       ""CRIME_OFFENSE_GROUP"" AS offense_group,
+       crime_count
+FROM ranked
+WHERE rn = 1
+ORDER BY crime_count DESC
+LIMIT 5;","The query identified the five district‑offense combinations with the highest crime totals:
+
+1. **Near North – Theft**: 164,869 incidents  
+2. **Central – Theft**: 153,181 incidents  
+3. **Harrison – Drug offenses**: 139,914 incidents  
+4. **Town Hall – Theft**: 135,596 incidents  
+5. **Near West – Theft**: 125,310 incidents  
+
+Overall, theft is the most common offense in four of the top five districts, while Harrison stands out with drug offenses as its leading crime category.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"91","Hard","How many case numbers appear more than once in the crime_incidents table?","SELECT COUNT(*) AS duplicate_case_numbers FROM (
+  SELECT ""CASE_NUMBER"" FROM crime_incidents GROUP BY ""CASE_NUMBER"" HAVING COUNT(*) > 1
+) t;","SELECT COUNT(*) AS duplicate_case_numbers
+FROM (
+    SELECT ""CASE_NUMBER""
+    FROM crime_incidents
+    GROUP BY ""CASE_NUMBER""
+    HAVING COUNT(*) > 1
+) AS dup_cases;","The query shows that **534** distinct case numbers occur multiple times in the `crime_incidents` table.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"92","Hard","Which community areas (by name) have a crime count more than twice the citywide average per community area?","SELECT can.community_area_name, COUNT(*) AS crime_count
+FROM crime_incidents ci JOIN community_area_names can ON ci.""COMMUNITY_AREA"" = can.community_area_id
+GROUP BY can.community_area_name
+HAVING COUNT(*) > 2 * (
+  SELECT AVG(area_total) FROM (
+    SELECT COUNT(*) AS area_total FROM crime_incidents GROUP BY ""COMMUNITY_AREA""
+  ) t
+)
+ORDER BY crime_count DESC;","WITH area_counts AS (
+    SELECT ""COMMUNITY_AREA"" AS area_id, COUNT(*) AS crime_count
+    FROM crime_incidents
+    WHERE ""COMMUNITY_AREA"" IS NOT NULL
+    GROUP BY ""COMMUNITY_AREA""
+),
+city_avg AS (
+    SELECT AVG(crime_count) AS avg_per_area
+    FROM area_counts
+)
+SELECT cn.community_area_name
+FROM area_counts ac
+CROSS JOIN city_avg ca
+JOIN community_area_names cn ON cn.community_area_id = ac.area_id
+WHERE ac.crime_count > 2 * ca.avg_per_area
+ORDER BY cn.community_area_name;","The query identified eleven community areas whose crime totals are more than double the citywide average per community area. These areas are:
+
+- Auburn Gresham  
+- Austin  
+- Humboldt Park  
+- Loop  
+- Near North Side  
+- Near West Side  
+- North Lawndale  
+- Roseland  
+- South Shore  
+- West Englewood  
+- West Town  
+
+In other words, each of these neighborhoods experiences a crime count that exceeds twice the average crime count across all community areas in the city.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"93","Hard","For each crime severity level, what is the average number of crimes per year?","SELECT ""CRIME_SEVERITY_LEVEL"", ROUND(AVG(yearly_count), 2) AS avg_crimes_per_year
+FROM (
+  SELECT ""CRIME_SEVERITY_LEVEL"", ""YEAR"", COUNT(*) AS yearly_count
+  FROM crime_incidents GROUP BY ""CRIME_SEVERITY_LEVEL"", ""YEAR""
+) t
+GROUP BY ""CRIME_SEVERITY_LEVEL"" ORDER BY avg_crimes_per_year DESC;","WITH yearly_counts AS (
+    SELECT ""CRIME_SEVERITY_LEVEL"" AS severity,
+           ""YEAR"" AS yr,
+           COUNT(*) AS cnt
+    FROM crime_incidents
+    GROUP BY ""CRIME_SEVERITY_LEVEL"", ""YEAR""
+)
+SELECT severity,
+       ROUND(AVG(cnt)::numeric, 2) AS avg_crimes_per_year
+FROM yearly_counts
+GROUP BY severity
+ORDER BY severity;","The average annual crime count varies dramatically by severity:
+
+- **High‑severity crimes** average about **1,074 incidents per year**.  
+- **Medium‑severity crimes** average roughly **101,265 incidents per year**.  
+- **Variable‑severity crimes** average around **32,339 incidents per year**.  
+- **Low‑severity crimes** dominate the totals, with an average of **197,764 incidents per year**.  
+
+In other words, low‑severity offenses occur far more frequently than any other severity level, while high‑severity offenses are the least common.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"94","Hard","What are the top 5 districts (by name) with the largest increase in arrest rate from 2020 to 2024?","SELECT dn.district_name,
+       ROUND(100.0 * SUM(CASE WHEN ci.""YEAR"" = 2024 AND ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END), 0), 2)
+       - ROUND(100.0 * SUM(CASE WHEN ci.""YEAR"" = 2020 AND ci.""ARREST"" = TRUE THEN 1 ELSE 0 END) / NULLIF(SUM(CASE WHEN ci.""YEAR"" = 2020 THEN 1 ELSE 0 END), 0), 2) AS arrest_rate_change
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" IN (2020, 2024)
+GROUP BY dn.district_name
+ORDER BY arrest_rate_change DESC LIMIT 5;","WITH district_rates AS (
+    SELECT dn.district_name,
+           ci.""YEAR"" AS yr,
+           SUM(CASE WHEN ci.""ARREST"" THEN 1 ELSE 0 END)::float / NULLIF(COUNT(*), 0) AS arrest_rate
+    FROM crime_incidents ci
+    JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+    WHERE ci.""YEAR"" IN (2020, 2024)
+    GROUP BY dn.district_name, ci.""YEAR""
+),
+rate_changes AS (
+    SELECT dr.district_name,
+           MAX(CASE WHEN dr.yr = 2020 THEN dr.arrest_rate END) AS rate_2020,
+           MAX(CASE WHEN dr.yr = 2024 THEN dr.arrest_rate END) AS rate_2024,
+           (MAX(CASE WHEN dr.yr = 2024 THEN dr.arrest_rate END) -
+            MAX(CASE WHEN dr.yr = 2020 THEN dr.arrest_rate END)) AS absolute_increase
+    FROM district_rates dr
+    GROUP BY dr.district_name
+)
+SELECT rc.district_name,
+       ROUND(rc.absolute_increase::numeric, 4) AS arrest_rate_increase
+FROM rate_changes rc
+ORDER BY rc.absolute_increase DESC
+LIMIT 5;","The query identified the five Chicago police districts that experienced the greatest rise in arrest rates between 2020 and 2024.  
+
+| Rank | District      | Increase in arrest rate |
+|------|---------------|--------------------------|
+| 1    | Lincoln       | **3.98 %** |
+| 2    | Rogers Park   | **1.68 %** |
+| 3    | Albany Park   | **1.40 %** |
+| 4    | Chicago Lawn | **0.56 %** |
+| 5    | Near North    | **0.46 %** |
+
+In summary, Lincoln district saw the steepest increase (nearly 4 percentage points), followed by Rogers Park and Albany Park, while Chicago Lawn and Near North had more modest gains.","Relevance: Approved | Validator: SQL syntax error: (psycopg2.errors.UndefinedFunction) function round(double precision, integer) does not exist
+LINE 20:        ROUND(absolute_increase, 4) AS arrest_rate_increase
+                ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: EXPLAIN WITH district_rates AS (
+    SELECT dn.""district_name"",
+           ci.""YEAR"" AS yr,
+           SUM(CASE WHEN ci.""ARREST"" THEN 1 ELSE 0 END)::float / NULLIF(COUNT(*), 0) AS arrest_rate
+    FROM crime_incidents ci
+    JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+    WHERE ci.""YEAR"" IN (2020, 2024)
+    GROUP BY dn.""district_name"", ci.""YEAR""
+),
+rate_changes AS (
+    SELECT dr.""district_name"",
+           MAX(CASE WHEN dr.yr = 2020 THEN dr.arrest_rate END) AS rate_2020,
+           MAX(CASE WHEN dr.yr = 2024 THEN dr.arrest_rate END) AS rate_2024,
+           (MAX(CASE WHEN dr.yr = 2024 THEN dr.arrest_rate END) -
+            MAX(CASE WHEN dr.yr = 2020 THEN dr.arrest_rate END)) AS absolute_increase
+    FROM district_rates dr
+    GROUP BY dr.""district_name""
+)
+SELECT ""district_name"",
+       ROUND(absolute_increase, 4) AS arrest_rate_increase
+FROM rate_changes
+ORDER BY absolute_increase DESC
+LIMIT 5;]
+(Background on this error at: https://sqlalche.me/e/20/f405) | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"95","Hard","Which crime clearance bucket has the highest proportion of crimes resulting in an arrest?","SELECT ""CRIME_CLEARANCE_BUCKET"",
+       ROUND(100.0 * SUM(CASE WHEN ""ARREST"" = TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) AS arrest_rate_pct
+FROM crime_incidents
+GROUP BY ""CRIME_CLEARANCE_BUCKET""
+ORDER BY arrest_rate_pct DESC LIMIT 1;","","I’m sorry, but I’m not able to answer that question. It’s outside the scope of what I can help with. If you have any other type of inquiry, feel free to ask!","Relevance: Rejected - missing action verb or data context"
+"96","Hard","Which ward (by name) had the single highest number of weapon crimes in any one year?","SELECT wn.ward_name, ci.""YEAR"", COUNT(*) AS weapon_crime_count
+FROM crime_incidents ci JOIN ward_names wn ON ci.""WARD"" = wn.ward_id
+WHERE ci.""WEAPON_CRIME_FLAG"" = 1
+GROUP BY wn.ward_name, ci.""YEAR""
+ORDER BY weapon_crime_count DESC LIMIT 1;","","I’m sorry, but I can’t help with that request.","Relevance: Rejected - missing action verb or data context"
+"97","Hard","What percentage of total crimes does each of the top 10 districts (by name) contribute?","WITH by_district AS (
+  SELECT dn.district_name, COUNT(*) AS crime_count
+  FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+  GROUP BY dn.district_name
+)
+SELECT district_name, crime_count, ROUND(100.0 * crime_count / SUM(crime_count) OVER (), 2) AS pct_of_total
+FROM by_district ORDER BY crime_count DESC LIMIT 10;","WITH total AS (
+    SELECT COUNT(*) AS total_cnt
+    FROM crime_incidents
+),
+district_counts AS (
+    SELECT dn.district_name,
+           COUNT(*) AS crime_cnt
+    FROM crime_incidents ci
+    JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+    GROUP BY dn.district_name
+)
+SELECT dc.district_name,
+       ROUND(100.0 * dc.crime_cnt / NULLIF(t.total_cnt, 0), 2) AS percentage_of_total
+FROM district_counts dc
+CROSS JOIN total t
+ORDER BY percentage_of_total DESC
+LIMIT 10;","The ten districts that account for the largest share of crimes are:
+
+| Rank | District (by name) | Share of total crimes |
+|------|--------------------|-----------------------|
+| 1 | Chicago Lawn | **6.70 %** |
+| 2 | Harrison | **6.32 %** |
+| 3 | Gresham | **5.84 %** |
+| 4 | South Chicago | **5.66 %** |
+| 5 | Englewood | **5.63 %** |
+| 6 | Grand Central | **5.63 %** |
+| 7 | Near West | **5.09 %** |
+| 8 | Grand Crossing | **5.09 %** |
+| 9 | Deering | **4.85 %** |
+|10 | Wentworth | **4.79 %** |
+
+**Key take‑away:** Together, these top‑10 districts contribute roughly **55.6 %** of all recorded crimes. Each district on its own accounts for between about **4.8 %** and **6.7 %** of the total crime volume.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"98","Hard","Which districts (by name) had a decline in crime count from 2023 to 2024?","SELECT dn.district_name,
+       SUM(CASE WHEN ci.""YEAR"" = 2023 THEN 1 ELSE 0 END) AS crimes_2023,
+       SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) AS crimes_2024
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" IN (2023, 2024)
+GROUP BY dn.district_name
+HAVING SUM(CASE WHEN ci.""YEAR"" = 2024 THEN 1 ELSE 0 END) < SUM(CASE WHEN ci.""YEAR"" = 2023 THEN 1 ELSE 0 END)
+ORDER BY dn.district_name;","SELECT dn.district_name
+FROM crime_incidents ci
+JOIN district_names dn ON dn.district_id = ci.""DISTRICT""
+WHERE ci.""YEAR"" IN (2023, 2024)
+GROUP BY dn.district_name
+HAVING COUNT(*) FILTER (WHERE ci.""YEAR"" = 2024) < COUNT(*) FILTER (WHERE ci.""YEAR"" = 2023);","The query identified the following districts as having experienced a drop in crime counts between 2023 and 2024:
+
+- Calumet  
+- Deering  
+- Englewood  
+- Grand Central  
+- Grand Crossing  
+- Gresham  
+- Harrison  
+- Homan Square  
+- Jefferson Park  
+- Morgan Park  
+- Ogden  
+- Rogers Park  
+- South Chicago  
+- Wentworth  
+
+These fourteen districts showed a decline in reported crimes from the prior year.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"99","Hard","Rank each district (by name) by total crime count for the year 2024.","SELECT dn.district_name, COUNT(*) AS crime_count,
+       RANK() OVER (ORDER BY COUNT(*) DESC) AS district_rank
+FROM crime_incidents ci JOIN district_names dn ON ci.""DISTRICT"" = dn.district_id
+WHERE ci.""YEAR"" = 2024
+GROUP BY dn.district_name
+ORDER BY district_rank;","WITH district_counts AS (
+    SELECT dn.district_name,
+           COUNT(*) AS total_crime
+    FROM crime_incidents ci
+    JOIN district_names dn
+      ON ci.""DISTRICT"" = dn.district_id
+    WHERE ci.""YEAR"" = 2024
+    GROUP BY dn.district_name
+)
+SELECT district_name,
+       total_crime,
+       RANK() OVER (ORDER BY total_crime DESC) AS rank
+FROM district_counts
+ORDER BY total_crime DESC;","**Summary of 2024 Crime Rankings by District**
+
+- The query ranked 23 Chicago police districts by their total number of reported crimes in 2024.  
+- **Chicago Lawn** recorded the highest crime count (17,277 incidents) and is ranked **#1**.  
+- The next four districts with the most crimes are **Near West (16,203)**, **Central (14,908)**, **Gresham (14,870)**, and **Town Hall (14,126)**, occupying ranks 2‑5.  
+- The middle of the list (ranks 10‑15) includes districts with crime totals ranging from about **13,184** (Wentworth) down to **10,253** (Calumet).  
+- **Jefferson Park** (9,083) and **Rogers Park** (8,828) sit near the lower‑mid tier (ranks 17‑18).  
+- The bottom three districts are **Austin (8,772, rank 19)**, **Albany Park (7,992, rank 20)**, and **Morgan Park (7,979, rank 21)**.  
+- The lowest‑ranked district is **Homan Square**, with only **13 crimes**, placing it at **rank 23**.  
+
+Overall, crime counts drop sharply from the top district (17,277) to the bottom (13), highlighting substantial variation in incident volume across Chicago’s districts for 2024.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
+"100","Hard","What are the top 5 (year, crime category) combinations with the highest crime counts?","SELECT ""YEAR"", ""CRIME_CATEGORY"", COUNT(*) AS crime_count
+FROM crime_incidents
+GROUP BY ""YEAR"", ""CRIME_CATEGORY""
+ORDER BY crime_count DESC LIMIT 5;","SELECT ""YEAR"", ""CRIME_CATEGORY"", COUNT(*) AS crime_count
+FROM crime_incidents
+GROUP BY ""YEAR"", ""CRIME_CATEGORY""
+ORDER BY crime_count DESC
+LIMIT 5;","The query identified the five year‑and‑crime‑category pairs with the largest number of reported incidents. All five entries are for **Property crimes**, and they occur in consecutive years from **2001 through 2005**. The counts show a gradual decline over this period:
+
+1. **2001 – Property:** 267,618 incidents  
+2. **2002 – Property:** 266,279 incidents  
+3. **2003 – Property:** 262,169 incidents  
+4. **2004 – Property:** 255,485 incidents  
+5. **2005 – Property:** 247,200 incidents  
+
+Thus, the highest crime volumes in the dataset are driven by Property offenses in the early 2000s, with the peak in 2001 and a steady decrease each subsequent year.","Relevance: Approved | Validator: Query syntax is valid | Runner: Query executed successfully. Rows: 1"
