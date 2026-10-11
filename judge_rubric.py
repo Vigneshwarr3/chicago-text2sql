@@ -1,18 +1,14 @@
 """
 judge_rubric.py
 ===============
-The grading rubrics used for the two LLM-judged metrics. They are shared by
-the manual grading pass (grades.json) and the scripted judge
-(judge_results.py --mode api), so both apply the same criteria.
-
-JUDGE_MODEL is the model used by the scripted path; the released grades.json
-was produced by Claude Sonnet 5.5 reading the exported items directly
-(see judge_results.py).
+The grading rubrics for the two judged metrics (EX and SQ), applied by
+judge_results.py with JUDGE_MODEL. Judge and agent come from
+different vendors (Anthropic vs OpenAI's gpt-oss-120b) to avoid self-preference.
 """
 
-JUDGE_MODEL = "claude-sonnet-5-5"
+JUDGE_MODEL = "claude-haiku-5-5"
 
-# --- EX fallback: is a result that failed strict/relational matching still equivalent? ---------
+# --- EX: is a result that did not exactly match the reference still equivalent? -----------------
 
 EX_RUBRIC = """You are checking a text-to-SQL agent's query result against a ground-truth result.
 Both are the first rows (up to 20) returned by running each query.

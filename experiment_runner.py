@@ -46,7 +46,7 @@ from eval_config import DEV_SUBSET_IDS, RESERVED_FEWSHOT_IDS, STAGES
 from prompt_stages import STAGE_PROMPTS
 from sql_agent_pipeline import AGENTS, invoke_agent
 
-load_dotenv()
+load_dotenv()   # reads GROQ_API_KEY and DB_* settings from .env
 
 BASE_DIR = Path(__file__).resolve().parent
 RESULTS_DIR = BASE_DIR / "results"
@@ -57,15 +57,17 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
 DB_PORT = os.getenv("DB_PORT", "5440")
 DB_NAME = os.getenv("DB_NAME", "chicago_crime_new")
-MODEL_NAME = "openai/gpt-oss-120b"
+MODEL_NAME = "openai/gpt-oss-120b"   # the model under test, served by Groq
 
 DATASET = "evaluation_dataset_v2.csv"
 # Tables shown to the LLM. The benchmark database holds only these four tables;
 # the list is kept explicit so the schema the model sees never depends on what
 # else is installed in the database.
 INCLUDE_TABLES = ["crime_incidents", "district_names", "community_area_names", "ward_names"]
-DEFAULT_WORKERS = 8
+DEFAULT_WORKERS = 8   # questions answered in parallel within one run
 
+# Columns of every results file. score_benchmark.py and judge_results.py later
+# append their own columns to the same files.
 OUTPUT_FIELDS = [
     "id", "complexity", "question",
     "ground_truth_sql", "agent_sql_query", "agent_answer", "error_log",
@@ -109,7 +111,13 @@ def _invoke_with_retry(app, question: str, max_attempts: int = 6) -> dict:
 def run_once(app, rows: list[dict], all_rows: list[dict], output_csv: Path,
              args, use_patch_mode: bool) -> tuple[int, int]:
     """Run one (agent, stage, run) over `rows` and write `output_csv`.
-    Returns (success, failed)."""
+    Returns (success, failed).
+
+    Two write modes:
+      normal     write the file from scratch (or append to it with --resume)
+      patch      used with --ids / --dev-subset: re-run only some questions and
+                 replace just those rows in an existing file, keeping the others
+    """
     output_csv.parent.mkdir(parents=True, exist_ok=True)
     completed_ids = load_completed_ids(output_csv) if args.resume else set()
 
@@ -133,6 +141,8 @@ def run_once(app, rows: list[dict], all_rows: list[dict], output_csv: Path,
     failed = 0
     write_lock = threading.Lock()
 
+    # Answer one question; called from the thread pool below. A failure is
+    # recorded in error_log instead of stopping the whole run.
     def work(i: int, row: dict) -> tuple[bool, dict]:
         qid = int(row["id"])
         question = row["question"]
@@ -150,7 +160,7 @@ def run_once(app, rows: list[dict], all_rows: list[dict], output_csv: Path,
             print(f"         id={qid} → ERROR: {exc}")
             out.update(agent_sql_query="", agent_answer="", error_log=f"Script exception: {exc}")
             ok = False
-        with write_lock:
+        with write_lock:                      # threads share one output file
             writer.writerow(out)
             out_f.flush()
         return ok, out
@@ -181,6 +191,7 @@ def run_once(app, rows: list[dict], all_rows: list[dict], output_csv: Path,
             w.writeheader()
             w.writerows(by_id[int(r["id"])] for r in all_rows if int(r["id"]) in by_id)
 
+    # Patch mode: merge the re-run rows into the rows already in the file.
     if use_patch_mode:
         out_f.seek(0)
         for new_row in csv.DictReader(out_f):
@@ -235,6 +246,7 @@ def main():
 
     all_rows = read_evaluation_dataset(input_csv)
 
+    # Pick the questions: the dev subset, explicit --ids, or an id range.
     if args.dev_subset:
         id_set = set(DEV_SUBSET_IDS)
         rows = [r for r in all_rows if int(r["id"]) in id_set]
@@ -248,6 +260,8 @@ def main():
     rows = [r for r in rows if int(r["id"]) not in exclude_set]
     use_patch_mode = bool(args.ids or args.dev_subset)
 
+    # One compiled graph per (agent, stage); the same graph is reused for all
+    # repeats of that pair, each writing its own file.
     summary = []
     for agent in agents:
         for stage in stages:

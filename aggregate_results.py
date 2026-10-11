@@ -3,16 +3,14 @@
 aggregate_results.py
 ====================
 Aggregates the scored results CSVs (after score_benchmark.py and
-judge_results.py --mode apply) into the tables reported in results.md.
+judge_results.py) into the tables reported in results.md.
 
 For every (agent, stage) it computes each metric per run, then reports the
 mean and standard deviation across the runs:
 
   VSR       valid_sql            % of questions with executable SQL
-  EX_hard   ex_hard              strict result-set identity (JSON match)
-  EX_rel    ex_relational        value-multiset equivalence, no judge
-  EX        ex_soft              hybrid: ex_relational OR judge
-  SQ        sq_score             mean Likert 1-5 (rows whose question got an answer)
+  EX        ex                   % of questions whose result matches the reference
+  SQ        sq_score             mean Likert 1-5 over all rows
 
 Also per complexity tier (Easy/Medium/Hard) and a failure breakdown.
 Prints markdown tables.
@@ -46,8 +44,10 @@ NAN = float("nan")
 
 def metrics(rows):
     """Per-run metrics. A metric whose column is absent or not yet filled in
-    (e.g. EX hybrid / SQ before judge_results.py has been applied) is NaN."""
+    (EX / SQ before judge_results.py has been applied) is NaN."""
     n = len(rows)
+    if not n:
+        return {"VSR": NAN, "EX": NAN, "SQ": NAN, "n": 0}
 
     def pct(col):
         if col not in rows[0] or any(r[col] == "" for r in rows):
@@ -55,8 +55,7 @@ def metrics(rows):
         return sum(int(r[col]) for r in rows) / n * 100
 
     sq = [int(r["sq_score"]) for r in rows if r.get("sq_score", "") != ""]
-    return {"VSR": pct("valid_sql"), "EX_hard": pct("ex_hard"), "EX_rel": pct("ex_relational"),
-            "EX": pct("ex_soft"), "SQ": (sum(sq) / len(sq)) if len(sq) == n else NAN, "n": n}
+    return {"VSR": pct("valid_sql"), "EX": pct("ex"), "SQ": (sum(sq) / len(sq)) if len(sq) == n else NAN, "n": n}
 
 
 def mean_sd(vals):
@@ -77,15 +76,16 @@ def main():
             per_run = [metrics(r) for r in runs]
             out["runs"][f"{agent}/{stage}"] = per_run
             out["overall"][f"{agent}/{stage}"] = {
-                m: mean_sd([p[m] for p in per_run]) for m in ("VSR", "EX_hard", "EX_rel", "EX", "SQ")}
+                m: mean_sd([p[m] for p in per_run]) for m in ("VSR", "EX", "SQ")}
             for tier in TIERS:
                 tr = [metrics([r for r in rows if r["complexity"] == tier]) for rows in runs]
                 out["tier"][f"{agent}/{stage}/{tier}"] = {
                     m: mean_sd([p[m] for p in tr]) for m in ("VSR", "EX", "SQ")} | {"n": tr[0]["n"]}
+            # Classify every wrong answer (EX = 0) by why it is wrong.
             fail = defaultdict(float)
             for rows in runs:
                 for r in rows:
-                    if r.get("ex_soft", r.get("ex_relational", "0")) == "1":
+                    if r.get("ex") == "1":
                         continue
                     if not r["agent_sql_query"].strip():
                         fail["no SQL (relevance rejection / invalid request)"] += 1
@@ -96,13 +96,13 @@ def main():
             out["failures"][f"{agent}/{stage}"] = {k: v / 5 for k, v in fail.items()}
 
     fmt = lambda ms, d=1: "n/a" if ms[0] != ms[0] else f"{ms[0]:.{d}f} ± {ms[1]:.{d}f}"
-    print("| Agent | Stage | VSR % | EX hard % | EX relational % | EX hybrid % | SQ (1-5) |")
-    print("|---|---|---|---|---|---|---|")
+    print("| Agent | Stage | VSR % | EX % | SQ (1-5) |")
+    print("|---|---|---|---|---|")
     for agent in AGENTS:
         for stage in STAGES:
             o = out["overall"][f"{agent}/{stage}"]
-            print(f"| {agent} | {stage} | {fmt(o['VSR'])} | {fmt(o['EX_hard'])} | {fmt(o['EX_rel'])} | {fmt(o['EX'])} | {fmt(o['SQ'],2)} |")
-    print("\nPer tier (EX hybrid %, VSR %, SQ):")
+            print(f"| {agent} | {stage} | {fmt(o['VSR'])} | {fmt(o['EX'])} | {fmt(o['SQ'],2)} |")
+    print("\nPer tier (VSR %, EX %, SQ):")
     for agent in AGENTS:
         for stage in STAGES:
             cells = []
@@ -110,7 +110,7 @@ def main():
                 t = out["tier"][f"{agent}/{stage}/{tier}"]
                 cells.append(f"{tier}(n={t['n']}) VSR {t['VSR'][0]:.0f} EX {t['EX'][0]:.0f} SQ {t['SQ'][0]:.2f}".replace("nan", "n/a"))
             print(agent, stage, " | ".join(cells))
-    print("\nMean failures per run (EX hybrid = 0):")
+    print("\nMean failures per run (EX = 0):")
     for key, d in out["failures"].items():
         print(key, {k: round(v, 1) for k, v in d.items()})
 

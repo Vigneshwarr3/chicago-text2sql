@@ -34,25 +34,37 @@ from langchain_groq import ChatGroq
 from langgraph.graph import END, START, StateGraph
 
 
+# The state dictionary that LangGraph passes from node to node. Each node reads
+# the fields it needs and writes its own output back into the same dict.
 class AgentState(TypedDict):
-    question: str
-    sql_query: Optional[str]
-    schema: Optional[str]
-    results: Optional[list]
-    answer: Optional[str]
-    error_log: list
-    retry_count: int
-    is_relevant: bool
-    last_error: Optional[str]
+    question: str               # the user's natural-language question
+    sql_query: Optional[str]    # SQL written by the query generator (None if none / rejected)
+    schema: Optional[str]       # CREATE TABLE text + sample rows shown to the model
+    results: Optional[list]     # what the query runner got back from PostgreSQL
+    answer: Optional[str]       # the final plain-English answer
+    error_log: list             # one line per step; useful for debugging a run
+    retry_count: int            # agent_2: how many generations have failed validation
+    is_relevant: bool           # agent_2: verdict of the relevance checker
+    last_error: Optional[str]   # agent_2: validation error passed back to the generator
 
 
+# Models sometimes wrap SQL in markdown fences (```sql ... ```); these patterns
+# recover the bare SQL (see _query_generator).
 _STRIP_FENCE_RE = re.compile(r"^```(?:sql)?\n?|```\s*$", re.IGNORECASE)
 _FENCED_SQL_RE = re.compile(r"```(?:sql)?\s*\n(.*?)```", re.IGNORECASE | re.DOTALL)
 
 
 def _relevance_checker(state: AgentState, llm: ChatGroq) -> AgentState:
+    """agent_2 only. A rule-based (keyword) filter that decides whether the
+    question is a data question at all; no model call is made to decide.
+
+    Known limitation, kept unchanged so the published results reproduce: the
+    rule needs one of the listed "action" phrases, so in-scope questions worded
+    "Which ... had ..." or "What is the ... rate ..." are rejected. In the
+    benchmark this rejects the same 8 of 96 questions in every run."""
     question = state["question"].lower().strip()
 
+    # A question must contain at least one phrase from each of these two sets.
     query_action_verbs = {
         "how many", "how often", "what are the", "list", "show",
         "find", "get", "count", "total", "sum", "average", "top", "most", "least",
@@ -63,6 +75,7 @@ def _relevance_checker(state: AgentState, llm: ChatGroq) -> AgentState:
         "records", "data", "district", "year", "date", "type", "arrest", "victim",
         "incidents", "cases", "statistics", "breakdown", "distribution",
     }
+    # Questions matching any of these patterns are rejected outright.
     irrelevant_patterns = [
         (r"what\s+is\s+\d+\s*[\+\-\*/]\s*\d+", "math expression"),
         (r"what is the meaning", "meaning of life"),
@@ -79,6 +92,9 @@ def _relevance_checker(state: AgentState, llm: ChatGroq) -> AgentState:
          "non-specific data"),
     ]
 
+    # Checked in order: vague "what is the database" questions, then clearly
+    # off-topic patterns, then the action-phrase + data-word rule. Python's
+    # for/else runs the `else` block only when the loop did not `break`.
     for pattern, reason in invalid_data_questions:
         if re.search(pattern, question, re.IGNORECASE):
             state["is_relevant"] = False
@@ -102,6 +118,8 @@ def _relevance_checker(state: AgentState, llm: ChatGroq) -> AgentState:
             state["is_relevant"] = False
             state["error_log"].append("Relevance: Rejected - missing action verb or data context")
 
+    # Rejected: the model is called only to word a polite out-of-scope reply.
+    # The graph then ends (see _should_continue_after_relevance).
     if not state["is_relevant"]:
         messages = [
             SystemMessage(content="You are a helpful assistant. The user's question is not related to a database or data analysis. Politely explain that their question is outside your scope and is not answerable using the database. Be concise but friendly."),
@@ -118,6 +136,10 @@ _SCHEMA_LOCK = threading.Lock()
 
 
 def _schema_fetcher(state: AgentState, db: SQLDatabase) -> AgentState:
+    """Put the table definitions (and a few sample rows per table, as produced
+    by LangChain's SQLDatabase.get_table_info) into the state. Only the tables
+    the SQLDatabase was created with are included (INCLUDE_TABLES in
+    experiment_runner.py)."""
     # The schema is static for the duration of a run, and fetching it over the
     # network costs ~5s per question, so fetch once per SQLDatabase and reuse.
     try:
@@ -132,6 +154,10 @@ def _schema_fetcher(state: AgentState, db: SQLDatabase) -> AgentState:
 
 
 def _query_generator(state: AgentState, llm: ChatGroq, system_prompt: str) -> AgentState:
+    """Ask the model for one SQL query. `system_prompt` is the prompt stage under
+    test (prompt_stages.py); the user message carries the schema and question.
+    On a retry (agent_2), the previous validation error is appended so the model
+    can correct its query."""
     schema = state.get("schema", "")
     question = state["question"]
     last_error = state.get("last_error")
@@ -147,6 +173,8 @@ def _query_generator(state: AgentState, llm: ChatGroq, system_prompt: str) -> Ag
     response = llm.invoke(messages)
     sql_query = response.content.strip()
 
+    # The stage 2-4 prompts tell the model to answer INVALID_REQUEST when a
+    # question cannot be answered with a SELECT.
     if "INVALID_REQUEST" in sql_query:
         state["error_log"].append("Generator: Request cannot be fulfilled with SELECT query")
         state["sql_query"] = None
@@ -165,6 +193,10 @@ def _query_generator(state: AgentState, llm: ChatGroq, system_prompt: str) -> Ag
 
 
 def _query_validator(state: AgentState, db: SQLDatabase) -> AgentState:
+    """agent_2 only. Reject data-modifying statements, then ask PostgreSQL to
+    plan the query with EXPLAIN (which checks syntax, table and column names
+    without running it). On failure, sql_query is cleared and the error is kept
+    in last_error for the next generation attempt."""
     if not state.get("sql_query"):
         state["error_log"].append("Validator: No SQL query to validate")
         return state
@@ -191,6 +223,9 @@ def _query_validator(state: AgentState, db: SQLDatabase) -> AgentState:
 
 
 def _should_retry_query(state: AgentState) -> Literal["query_generator", "query_runner", "answer_synthesizer"]:
+    """agent_2 routing after validation: a valid query goes to the runner; an
+    invalid one goes back to the generator, at most 3 generations in total;
+    after the third failure a fixed apology becomes the answer."""
     if not state.get("sql_query"):
         state["retry_count"] += 1
         if state["retry_count"] >= 3:
@@ -202,6 +237,9 @@ def _should_retry_query(state: AgentState) -> Literal["query_generator", "query_
 
 
 def _query_runner(state: AgentState, db: SQLDatabase) -> AgentState:
+    """Execute the query. SQLDatabase.run returns the rows as one formatted
+    string, so `results` is normally a one-element list holding that string.
+    Errors are logged and produce an empty result."""
     try:
         result = db.run(state["sql_query"], fetch="all")
         state["results"] = result if isinstance(result, list) else [result]
@@ -213,6 +251,9 @@ def _query_runner(state: AgentState, db: SQLDatabase) -> AgentState:
 
 
 def _answer_synthesizer(state: AgentState, llm: ChatGroq) -> AgentState:
+    """Turn the query result into a plain-English answer with one model call."""
+    # An answer already set earlier (relevance rejection, or 3 failed
+    # validations) is kept as is.
     if state.get("answer"):
         return state
 
@@ -220,6 +261,9 @@ def _answer_synthesizer(state: AgentState, llm: ChatGroq) -> AgentState:
         state["answer"] = "No results found for your query."
         return state
 
+    # `results` is normally a one-element list holding the whole result as one
+    # string (see _query_runner), so [:10] does not limit the rows: the model
+    # sees the complete result.
     results_str = json.dumps(state["results"][:10], indent=2, default=str)
     messages = [
         SystemMessage(content="You are a data analyst. Provide a clear, concise natural language summary of the SQL query results."),
@@ -230,6 +274,7 @@ def _answer_synthesizer(state: AgentState, llm: ChatGroq) -> AgentState:
     return state
 
 
+# agent_2 routing after the relevance checker: continue, or stop the graph.
 def _should_continue_after_relevance(state: AgentState) -> Literal["schema_fetcher", "__end__"]:
     return "schema_fetcher" if state.get("is_relevant") else END
 
@@ -240,6 +285,8 @@ def build_sql_agent(query_gen_prompt: str, llm: ChatGroq, db: SQLDatabase):
 
     graph = StateGraph(AgentState)
 
+    # Each node is a function of the state; lambdas bind the model, database
+    # and prompt to it.
     graph.add_node("relevance_checker", lambda s: _relevance_checker(s, llm))
     graph.add_node("schema_fetcher", lambda s: _schema_fetcher(s, db))
     graph.add_node("query_generator", lambda s: _query_generator(s, llm, query_gen_prompt))
@@ -247,6 +294,8 @@ def build_sql_agent(query_gen_prompt: str, llm: ChatGroq, db: SQLDatabase):
     graph.add_node("query_runner", lambda s: _query_runner(s, db))
     graph.add_node("answer_synthesizer", lambda s: _answer_synthesizer(s, llm))
 
+    # Fixed edges always go to the next node; conditional edges call a routing
+    # function that returns the name of the next node.
     graph.add_edge(START, "relevance_checker")
     graph.add_conditional_edges("relevance_checker", _should_continue_after_relevance)
     graph.add_edge("schema_fetcher", "query_generator")
@@ -295,6 +344,8 @@ def build_agent_2(query_gen_prompt: str, llm: ChatGroq, db: SQLDatabase):
     return build_sql_agent(query_gen_prompt, llm, db)
 
 
+# Name -> builder. Every builder takes (query_gen_prompt, llm, db) and returns
+# a compiled graph that invoke_agent() can run.
 AGENTS = {"agent_1": build_agent_1, "agent_2": build_agent_2}
 
 

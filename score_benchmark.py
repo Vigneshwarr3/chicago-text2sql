@@ -12,12 +12,14 @@ per-query timeout) and adds these columns in place:
   gt_nrows/agent_nrows number of rows returned (up to FULL_ROWS; -1 on error)
   valid_sql            1 if the agent produced SQL that executed without error
                        (rows with no SQL, e.g. relevance rejections, count as 0)
-  ex_hard              1 if the two result sets match exactly as JSON
-  ex_relational        1 if the two result sets are equal as value multisets,
-                       ignoring column names, row order and 2-decimal precision
+  ex_match             1 if the two result sets are identical as value multisets:
+                       row order, column names, case/whitespace and 2-decimal
+                       rounding are ignored; column order and extra/missing
+                       columns are not. This is a fast path, not a reported
+                       metric: it spares the judge the obvious cases.
 
-The LLM-judge fallback for EX and the Synthesis Quality score are added by
-judge_results.py, which reads these columns.
+The final EX and the Synthesis Quality score (SQ) are added by judge_results.py,
+which reads these columns.
 
 Each distinct SQL string is executed once and reused across all files, so the
 cost is ~(unique agent SQL + 96) queries rather than 2 x rows x files.
@@ -41,14 +43,12 @@ from typing import Optional
 import psycopg2
 from dotenv import load_dotenv
 
-
-
 load_dotenv()
 csv.field_size_limit(sys.maxsize)
 
 BASE_DIR = Path(__file__).resolve().parent
 FULL_ROWS = 1000   # rows compared in memory; the CSV only stores a MAX_ROWS-row preview
-MAX_ROWS = 20
+MAX_ROWS = 20      # rows saved in the CSV, which is also all the judge ever sees
 
 
 # -- result comparison helpers -------------------------------------------------------------
@@ -69,7 +69,9 @@ def _parse_result(json_str: str) -> Optional[list]:
 
 
 def _normalize(v):
-    """Normalize a scalar value for column-agnostic comparison."""
+    """Normalize a scalar value for column-agnostic comparison:
+    numbers (and numeric strings) are rounded to 2 decimals, other strings
+    are trimmed and lower-cased, booleans become 0/1."""
     if v is None:
         return None
     if isinstance(v, bool):
@@ -88,7 +90,8 @@ def _normalize(v):
 def _to_value_multiset(data: list) -> list:
     """
     Convert list-of-dicts to a sorted list of normalized value tuples.
-    Column names are ignored — only values matter.
+    Rows are sorted (row order ignored); column names are ignored but the order of
+    values within a row is kept, so swapped or extra columns do not match.
     """
     rows = []
     for row in data:
@@ -99,16 +102,7 @@ def _to_value_multiset(data: list) -> list:
     return sorted(rows, key=lambda t: [str(x) for x in t])
 
 
-def ex_hard(gt_json: str, ag_json: str) -> int:
-    """Strict exact JSON match after sorting by key."""
-    try:
-        gt = sorted(json.loads(gt_json), key=lambda x: json.dumps(x, sort_keys=True, default=str))
-        ag = sorted(json.loads(ag_json), key=lambda x: json.dumps(x, sort_keys=True, default=str))
-        return 1 if gt == ag else 0
-    except Exception:
-        return 0
-
-NEW_COLUMNS = ["ground_truth_result", "agent_result", "gt_nrows", "agent_nrows", "valid_sql", "ex_hard", "ex_relational"]
+NEW_COLUMNS = ["ground_truth_result", "agent_result", "gt_nrows", "agent_nrows", "valid_sql", "ex_match"]
 
 
 def run_query(cur, conn, sql: str) -> str:
@@ -151,11 +145,11 @@ def is_error(result_json: str) -> bool:
     return isinstance(data, dict) and "error" in data
 
 
-def ex_relational(gt_json: str, ag_json: str) -> int:
-    """Set-equivalence of value multisets. Differs from
-    compare_query_results.ex_relational in one case: two *valid, empty*
-    result sets are equal (the original returns False because _parse_result
-    maps empty results to None)."""
+def ex_match(gt_json: str, ag_json: str) -> int:
+    """Equality of the two result sets as multisets of normalized value tuples.
+    Two valid, empty result sets are equal. A result of more than FULL_ROWS rows
+    is compared on its first FULL_ROWS rows only (no reference query returns more
+    than 77 rows, so this only bounds memory for runaway agent queries)."""
     if is_error(gt_json) or is_error(ag_json):
         return 0
     gt, ag = json.loads(gt_json), json.loads(ag_json)
@@ -182,11 +176,15 @@ def main():
     conn = psycopg2.connect(host=os.getenv("DB_HOST", "127.0.0.1"), port=int(os.getenv("DB_PORT", "5440")),
                             dbname=args.db_name, user=os.getenv("DB_USER"),
                             password=os.getenv("DB_PASSWORD"), connect_timeout=10)
-    conn.set_session(readonly=True, autocommit=False)   # agent SQL is untrusted: never write
+    # Agent SQL is untrusted, so the session is read-only (the database role is
+    # read-only as well), and every query is rolled back after it runs.
+    conn.set_session(readonly=True, autocommit=False)
     cur = conn.cursor()
     cur.execute("SET statement_timeout = %s", (int(args.timeout * 1000),))
     conn.commit()
 
+    # The same SQL string often appears in many of the 40 files (temperature 0),
+    # so each distinct query is executed once and its result reused.
     cache: dict[str, str] = {}
 
     def result_for(sql: str) -> str:
@@ -205,6 +203,7 @@ def main():
             rows = list(reader)
             fields = list(reader.fieldnames)
         for row in rows:
+            # The reference SQL is taken from the dataset, not from the run file.
             gt_sql = gt_by_id.get(row["id"], row["ground_truth_sql"])
             gt = result_for(gt_sql)
             ag = result_for(row["agent_sql_query"])
@@ -213,8 +212,7 @@ def main():
             row["gt_nrows"] = nrows(gt)
             row["agent_nrows"] = nrows(ag)
             row["valid_sql"] = int(bool(row["agent_sql_query"].strip()) and not is_error(ag))
-            row["ex_hard"] = ex_hard(gt, ag)
-            row["ex_relational"] = ex_relational(gt, ag)
+            row["ex_match"] = ex_match(gt, ag)
         for col in NEW_COLUMNS:
             if col not in fields:
                 fields.append(col)
@@ -227,8 +225,7 @@ def main():
         os.replace(tmp, path)
         n = len(rows)
         print(f"{Path(path).relative_to(args.results_dir)}: VSR={sum(int(r['valid_sql']) for r in rows)/n:.0%} "
-              f"EX_hard={sum(int(r['ex_hard']) for r in rows)/n:.0%} "
-              f"EX_rel={sum(int(r['ex_relational']) for r in rows)/n:.0%}")
+              f"exact-match={sum(int(r['ex_match']) for r in rows)/n:.0%}")
 
     gt_err = [i for i, s in gt_by_id.items() if is_error(cache.get(s, "{}"))]
     if gt_err:

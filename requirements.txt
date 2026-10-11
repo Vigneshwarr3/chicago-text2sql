@@ -7,5 +7,8 @@ langgraph==1.0.10
 SQLAlchemy==2.0.48
 psycopg2-binary==2.9.11
 python-dotenv==1.2.2
-# optional: only for `judge_results.py --mode api`
+# only for `judge_results.py`
 anthropic
+# optional: only to re-draw the agent diagrams in agent_diagrams.ipynb
+# matplotlib
+# jupyter
