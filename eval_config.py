@@ -4,7 +4,7 @@ eval_config.py
 Which question ids are reserved as prompt examples (stage 3/4), which ids make
 up the fixed 20-question dev subset used for cheap smoke tests, and the stage names.
 
-evaluation_dataset_v2.csv has 100 rows, contiguous by complexity:
+data/evaluation_dataset.csv has 100 rows, contiguous by complexity:
 Easy = ids 1-30, Medium = ids 31-70, Hard = ids 71-100 (30/40/30 split).
 """
 

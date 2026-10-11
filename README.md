@@ -107,7 +107,7 @@ python aggregate_results.py            # mean ± SD tables
 - **SQ**: the judge applies the 1–5 rubric in `judge_rubric.py`. Answers to questions where no query ran, or the
   query errored and the answer says "no results", score 1 by rule, without a judge call.
 - `judge_results.py` is one step: it sends every item that needs a grade to the API, caches the grades in
-  `grades.json` keyed by a hash of the content judged (identical items are graded once, and a re-run only grades
+  `results/grades.json` keyed by a hash of the content judged (identical items are graded once, and a re-run only grades
   what is new), and writes `ex` and `sq_score` into the run files. `--limit 5` tries the judge on five items
   first; `--dry-run` only counts what needs grading. Until it has run, `aggregate_results.py` prints `n/a` for EX and SQ.
 
@@ -118,7 +118,7 @@ python aggregate_results.py            # tables from the scored files in results
 ```
 
 To re-derive the scores from the raw agent output instead, run `score_benchmark.py` (needs the database) and then
-`judge_results.py`. `grades.json` holds every grade the judge gave for the published run (1,412 items, each with a
+`judge_results.py`. `results/grades.json` holds every grade the judge gave for the published run (1,412 items, each with a
 one-line reason), so for these results `judge_results.py` makes no API calls and needs no key. Grading a new run
 of your own needs an `ANTHROPIC_API_KEY`, because its answers will differ.
 
@@ -157,7 +157,7 @@ therefore present on purpose and are documented rather than fixed:
   happened in all agent_1 runs, agent_2 stage 1 and agent_2 stage 2 runs 1–2, and not afterwards, with no
   change to the code. SQ in these files should therefore not be used to compare the agents or the prompt
   stages.
-- **The judge's grades have not been audited by hand.** Every grade and its reason are in `grades.json` for
+- **The judge's grades have not been audited by hand.** Every grade and its reason are in `results/grades.json` for
   anyone who wants to check them.
 
 ## The data
@@ -176,22 +176,29 @@ raw snapshot is not stored in this repository.
 
 ## Repository layout
 
-| Path | Purpose |
-|---|---|
-| `docker-compose.yml` | runs the published database image |
-| `docker/` | how the database image was built |
-| `evaluation_dataset_v2.csv` | the 100 questions with reference SQL (Easy 1–30, Medium 31–70, Hard 71–100) |
-| `prompt_stages.py` | the four prompt variants |
-| `sql_agent_pipeline.py` | agent_1 and agent_2 (LangGraph) |
-| `experiment_runner.py` | runs agents × stages × repeats |
-| `score_benchmark.py` | VSR and the exact-match pre-check, against the database |
-| `judge_results.py`, `judge_rubric.py` | EX and SQ judging: rubrics and grading |
-| `aggregate_results.py` | summary tables |
-| `chat.py` | chat with the agent in the terminal |
-| `results/` | the author's 40 scored runs |
-| `grades.json` | every judge grade (EX and SQ) with its reason |
-| `agent_diagrams.ipynb`, `figures/` | diagrams of the two agent graphs (PNG, SVG, PDF) |
-| `eval_config.py` | reserved example ids, dev subset, stage names |
+```
+chicago-text2sql/
+├── chat.py                  chat with the agent in the terminal
+├── sql_agent_pipeline.py    the two agents (LangGraph): agent_1 and agent_2
+├── prompt_stages.py         the four prompt stages
+├── eval_config.py           reserved example ids, dev subset, stage names
+├── experiment_runner.py     step 1: run agents × stages × repeats
+├── score_benchmark.py       step 2: VSR and the exact-match check, against the database
+├── judge_results.py         step 3: EX and SQ, graded by the LLM judge
+├── judge_rubric.py                  the judge's rubrics and model
+├── aggregate_results.py     step 4: mean ± SD tables
+├── data/
+│   └── evaluation_dataset.csv   the 100 questions with reference SQL (Easy 1–30, Medium 31–70, Hard 71–100)
+├── results/
+│   ├── agent1/, agent2/     the author's 40 scored runs ({stage}_run{k}.csv)
+│   └── grades.json          every judge grade (EX and SQ) with its reason
+├── docs/
+│   ├── agent_diagrams.ipynb draws the two agent graphs
+│   └── figures/             agent_1_langgraph.png, agent_2_langgraph.png
+├── docker/                  how the database image was built
+├── docker-compose.yml       runs the published database image
+├── requirements.txt, .env.example, LICENSE
+```
 
 ## Troubleshooting
 

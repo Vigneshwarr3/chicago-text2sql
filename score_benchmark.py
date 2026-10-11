@@ -164,7 +164,7 @@ def ex_match(gt_json: str, ag_json: str) -> int:
 def main():
     p = argparse.ArgumentParser(description="Score benchmark results (no LLM)")
     p.add_argument("--results-dir", type=Path, default=BASE_DIR / "results")
-    p.add_argument("--dataset", default="evaluation_dataset_v2.csv")
+    p.add_argument("--dataset", default="data/evaluation_dataset.csv")
     p.add_argument("--db-name", default=os.getenv("DB_NAME", "chicago_crime_new"))
     p.add_argument("--timeout", type=float, default=120.0, help="Per-query timeout in seconds (default 120)")
     args = p.parse_args()

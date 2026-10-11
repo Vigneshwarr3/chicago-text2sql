@@ -13,7 +13,7 @@ Adds the two judged metrics to the scored results CSVs, using the Anthropic API
 Rows whose SQL did not run (valid_sql = 0) get ex = 0, and answers with no query
 or an errored query get sq_score = 1, without a judge call.
 One command does everything: it finds the items that still need a grade, sends
-them to the judge (JUDGE_MODEL, or --model), caches the grades in grades.json and
+them to the judge (JUDGE_MODEL, or --model), caches the grades in results/grades.json and
 writes ex / sq_score into every results CSV. Judging is keyed by content hash,
 so identical (question, result, answer) triples across the 40 files are judged
 once, and re-running only grades what is new. Needs ANTHROPIC_API_KEY in the
@@ -44,7 +44,7 @@ load_dotenv()
 csv.field_size_limit(sys.maxsize)
 
 BASE_DIR = Path(__file__).resolve().parent
-GRADES_PATH = BASE_DIR / "grades.json"
+GRADES_PATH = BASE_DIR / "results" / "grades.json"   # the grade cache, kept next to the results
 
 # What the judge is shown. Results and answers longer than this are cut, so the
 # judge sees at most the first 20 stored rows (score_benchmark.MAX_ROWS) and 700

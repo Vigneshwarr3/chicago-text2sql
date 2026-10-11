@@ -2,7 +2,7 @@
 """
 experiment_runner.py
 =====================
-Runs agents x prompt stages x repeats over evaluation_dataset_v2.csv through the
+Runs agents x prompt stages x repeats over data/evaluation_dataset.csv through the
 agents in sql_agent_pipeline.py (agent_1 = simple, agent_2 = relevance check +
 validation/retry). Each (agent, stage, run) writes its own file:
 
@@ -59,7 +59,7 @@ DB_PORT = os.getenv("DB_PORT", "5440")
 DB_NAME = os.getenv("DB_NAME", "chicago_crime_new")
 MODEL_NAME = "openai/gpt-oss-120b"   # the model under test, served by Groq
 
-DATASET = "evaluation_dataset_v2.csv"
+DATASET = "data/evaluation_dataset.csv"   # the 100 questions and their reference SQL
 # Tables shown to the LLM. The benchmark database holds only these four tables;
 # the list is kept explicit so the schema the model sees never depends on what
 # else is installed in the database.
@@ -211,7 +211,7 @@ def run_once(app, rows: list[dict], all_rows: list[dict], output_csv: Path,
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run agents x prompt stages x repeats over evaluation_dataset_v2.csv")
+    parser = argparse.ArgumentParser(description="Run agents x prompt stages x repeats over data/evaluation_dataset.csv")
     parser.add_argument("--agent", default="all", choices=[*AGENTS, "all"],
                         help="agent_1 (simple), agent_2 (validate+retry) or all (default)")
     parser.add_argument("--stage", default="all", choices=[*STAGES, "all"],

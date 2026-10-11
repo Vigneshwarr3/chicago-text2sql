@@ -9,6 +9,6 @@ psycopg2-binary==2.9.11
 python-dotenv==1.2.2
 # only for `judge_results.py`
 anthropic
-# optional: only to re-draw the agent diagrams in agent_diagrams.ipynb
+# optional: only to re-draw the agent diagrams in docs/agent_diagrams.ipynb
 # matplotlib
 # jupyter
